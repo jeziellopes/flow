@@ -19,11 +19,26 @@ function LiveIndicatorConnected({ className }: { className?: string }) {
   return <LiveIndicator status={status} className={className} />;
 }
 
+function PortfolioWidget() {
+  const totalBalance = useTerminalStore((s) => s.portfolioSummary.totalBalance);
+  const dailyProfitPct = useTerminalStore((s) => s.portfolioSummary.dailyProfitPct);
+  return (
+    <Link
+      to="/portfolio"
+      className="flex items-center gap-3 px-3 py-1 rounded border border-border/60 transition-colors hover:border-border text-xs font-mono bg-background"
+    >
+      <span className="tabular-nums font-semibold">
+        ${totalBalance.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+      </span>
+      <span className="tabular-nums text-trading-profit">+{dailyProfitPct}%</span>
+      <span className="text-[10px] text-muted-foreground">Portfolio →</span>
+    </Link>
+  );
+}
+
 function RootComponent() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isSymbolRoute = pathname.startsWith("/symbol/");
-  const totalBalance = useTerminalStore((s) => s.portfolioSummary.totalBalance);
-  const dailyProfitPct = useTerminalStore((s) => s.portfolioSummary.dailyProfitPct);
   return (
     <ErrorBoundary
       fallback={(error) => (
@@ -50,16 +65,7 @@ function RootComponent() {
             </Link>
             {isSymbolRoute && <TickerHeader price={MOCK_BASE_BTC} changePct={MOCK_CHANGE_PCT} />}
             <div className="flex-1" />
-            <Link
-              to="/portfolio"
-              className="flex items-center gap-3 px-3 py-1 rounded border border-border/60 transition-colors hover:border-border text-xs font-mono bg-background"
-            >
-              <span className="tabular-nums font-semibold">
-                ${totalBalance.toLocaleString("en-US", { minimumFractionDigits: 2 })}
-              </span>
-              <span className="tabular-nums text-trading-profit">+{dailyProfitPct}%</span>
-              <span className="text-[10px] text-muted-foreground">Portfolio →</span>
-            </Link>
+            <PortfolioWidget />
             <div className="w-px h-5 bg-border mx-1" />
             <ThemeDropdown />
             <LiveIndicatorConnected className="ml-1" />
