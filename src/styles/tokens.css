@@ -13,14 +13,33 @@
  * TypeScript constants      →  src/lib/design-tokens.ts  (pnpm tokens)
  */
 
+/* ── Self-hosted fonts ───────────────────────────────────────────────────── */
+
+/* Geist Mono — variable font, weights 100–900 (data, numbers, UI text) */
+@font-face {
+  font-family: "Geist Mono";
+  src: url("/fonts/GeistMonoVF.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Orbitron — brand/logo only, weight 700 */
+@font-face {
+  font-family: "Orbitron";
+  src: url("/fonts/Orbitron-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ============================================================
    LAYER 3 — :root  (fonts + durations ONLY — zero colors)
    ============================================================ */
 :root {
   /* ── Fonts ────────────────────────────────────────────────────────── */
-  --font-share-tech-mono: "Share Tech Mono";
-  --font-orbitron:        "Orbitron";
-  --font-fira-mono:       "Fira Mono";
+  --font-geist-mono: "Geist Mono";
+  --font-orbitron:   "Orbitron";
 
   /* ── Animation Durations ─────────────────────────────────────────── */
   --duration-fast:    150ms;

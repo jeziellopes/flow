@@ -17,7 +17,7 @@ export function TickerHeader({ price, changePct }: TickerHeaderProps) {
   const isPositive = changePct >= 0;
   return (
     <div className="flex items-center gap-6 h-full">
-      <SymbolSelector triggerClassName="font-cypher text-base font-bold text-primary hover:text-primary/80" />
+      <SymbolSelector triggerClassName="font-mono text-base font-bold text-primary hover:text-primary/80" />
       <span className="font-mono text-xl tabular-nums font-semibold text-trading-tick-up">
         {price.toLocaleString("en-US", { minimumFractionDigits: 2 })}
       </span>

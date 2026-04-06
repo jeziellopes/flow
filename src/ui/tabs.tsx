@@ -24,7 +24,7 @@ const tabVariants = cva(
         pill: "",
         underline: "px-3 py-2 text-sm -mb-px border-b-1",
         header:
-          "self-stretch flex items-center px-3 text-xs leading-4 font-cypher font-semibold tracking-wide uppercase -mb-px border-b-1",
+          "self-stretch flex items-center px-3 text-xs leading-4 font-mono font-semibold tracking-wide uppercase -mb-px border-b-1",
       },
       active: {
         true: "",
