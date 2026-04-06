@@ -15,8 +15,10 @@ function formatTime(ts: number): string {
 export function MyTradesFeed({ fills }: MyTradesFeedProps) {
   if (fills.length === 0) {
     return (
-      <div className="flex items-center justify-center h-16 text-xs text-muted-foreground font-mono">
-        No fills yet — place an order to see your trades here.
+      <div className="flex flex-col h-full justify-center">
+        <div className="flex items-center justify-center h-16 text-xs text-muted-foreground font-mono">
+          No fills yet — place an order to see your trades here.
+        </div>
       </div>
     );
   }
