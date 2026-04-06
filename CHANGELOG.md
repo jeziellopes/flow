@@ -1,3 +1,10 @@
+# [1.1.0-next.12](https://github.com/jeziellopes/flow/compare/v1.1.0-next.11...v1.1.0-next.12) (2026-04-06)
+
+
+### Bug Fixes
+
+* **infra:** add order book gap detection and snapshot staleness check ([7a381a5](https://github.com/jeziellopes/flow/commit/7a381a5dde110d70f26e15a5b2eceae9ae12dac0)), closes [#117](https://github.com/jeziellopes/flow/issues/117)
+
 # [1.1.0-next.11](https://github.com/jeziellopes/flow/compare/v1.1.0-next.10...v1.1.0-next.11) (2026-04-06)
 
 
