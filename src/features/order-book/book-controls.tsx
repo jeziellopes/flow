@@ -31,11 +31,11 @@ function ViewModeToggle({ value, onChange }: ViewModeToggleProps) {
           key={mode}
           type="button"
           intent="segment"
-          size="xs"
+          size="icon"
           title={title}
           onClick={() => onChange(mode)}
           className={cn(
-            "gap-px font-mono tabular-nums",
+            "flex-col gap-0",
             value === mode && "bg-primary/15 ring-1 ring-primary/30 text-foreground",
           )}
         >
@@ -50,24 +50,32 @@ function ViewModeIcon({ mode, active }: { mode: ViewMode; active: boolean }) {
   if (mode === "both") {
     return (
       <>
-        <span className={active ? "text-trading-bid" : undefined}>■</span>
-        <span className={active ? "text-trading-ask" : undefined}>■</span>
+        <span className={cn("text-[7px] leading-none text-trading-ask")}>■</span>
+        <span className={cn("text-[7px] leading-none text-trading-bid")}>■</span>
       </>
     );
   }
   if (mode === "bids") {
     return (
       <>
-        <span className={active ? "text-trading-bid" : undefined}>■</span>
-        <span className={active ? "text-trading-bid" : undefined}>■</span>
+        <span className={cn("text-[7px] leading-none", active ? "text-trading-bid" : undefined)}>
+          ■
+        </span>
+        <span className={cn("text-[7px] leading-none", active ? "text-trading-bid" : undefined)}>
+          ■
+        </span>
       </>
     );
   }
   // asks
   return (
     <>
-      <span className={active ? "text-trading-ask" : undefined}>■</span>
-      <span className={active ? "text-trading-ask" : undefined}>■</span>
+      <span className={cn("text-[7px] leading-none", active ? "text-trading-ask" : undefined)}>
+        ■
+      </span>
+      <span className={cn("text-[7px] leading-none", active ? "text-trading-ask" : undefined)}>
+        ■
+      </span>
     </>
   );
 }

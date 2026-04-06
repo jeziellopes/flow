@@ -1,26 +1,24 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { createContext, type ReactNode, use, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 // ---------------------------------------------------------------------------
-// Dropdown — lightweight controlled/uncontrolled dropdown primitive.
+// Dropdown — lightweight uncontrolled dropdown primitive.
 // Handles click-outside and Escape key. Composes via sub-components.
 //
 // Usage:
-//   <Dropdown>
+//   <Dropdown.Root>
 //     <Dropdown.Trigger>Open</Dropdown.Trigger>
 //     <Dropdown.Menu align="right">
 //       <Dropdown.Item onSelect={() => {}} active>Option A</Dropdown.Item>
 //       <Dropdown.Item onSelect={() => {}}>Option B</Dropdown.Item>
 //     </Dropdown.Menu>
-//   </Dropdown>
+//   </Dropdown.Root>
 // ---------------------------------------------------------------------------
 
 interface DropdownContextValue {
   open: boolean;
   setOpen: (v: boolean) => void;
 }
-
-import { createContext, use } from "react";
 
 const DropdownContext = createContext<DropdownContextValue | null>(null);
 
@@ -98,7 +96,7 @@ function DropdownMenu({ children, align = "left", className }: DropdownMenuProps
   const { open } = useDropdownContext();
   if (!open) return null;
   return (
-    <ul
+    <div
       role="listbox"
       className={cn(
         "absolute top-full mt-1 z-50 min-w-full rounded border border-border bg-card shadow-lg py-0.5",
@@ -107,7 +105,7 @@ function DropdownMenu({ children, align = "left", className }: DropdownMenuProps
       )}
     >
       {children}
-    </ul>
+    </div>
   );
 }
 
@@ -121,7 +119,8 @@ interface DropdownItemProps {
 function DropdownItem({ children, onSelect, active, className }: DropdownItemProps) {
   const { setOpen } = useDropdownContext();
   return (
-    <li
+    <button
+      type="button"
       role="option"
       aria-selected={active}
       onClick={() => {
@@ -129,7 +128,7 @@ function DropdownItem({ children, onSelect, active, className }: DropdownItemPro
         setOpen(false);
       }}
       className={cn(
-        "px-2.5 py-1 cursor-pointer transition-colors",
+        "w-full text-left px-2.5 py-1 cursor-pointer transition-colors",
         active
           ? "text-foreground bg-primary/10"
           : "text-muted-foreground hover:bg-muted hover:text-foreground",
@@ -137,7 +136,7 @@ function DropdownItem({ children, onSelect, active, className }: DropdownItemPro
       )}
     >
       {children}
-    </li>
+    </button>
   );
 }
 
