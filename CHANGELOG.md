@@ -1,3 +1,10 @@
+# [1.1.0-next.10](https://github.com/jeziellopes/flow/compare/v1.1.0-next.9...v1.1.0-next.10) (2026-04-06)
+
+
+### Performance Improvements
+
+* **chart:** fix CandleChart blink via PortfolioWidget extraction + stable ref ([d6baa9a](https://github.com/jeziellopes/flow/commit/d6baa9a6d1d445c13771748faddad70a96ae2699)), closes [#105](https://github.com/jeziellopes/flow/issues/105) [#105](https://github.com/jeziellopes/flow/issues/105)
+
 # [1.1.0-next.9](https://github.com/jeziellopes/flow/compare/v1.1.0-next.8...v1.1.0-next.9) (2026-04-06)
 
 
