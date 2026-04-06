@@ -1,3 +1,4 @@
+import { groupLevels } from "@/domain/market-data/book-grouping";
 import { useMarketDataStore } from "@/stores/market-data";
 import type { OrderBookState } from "./order-book";
 import type { PriceLevel } from "./order-book-row";
@@ -6,15 +7,25 @@ import type { PriceLevel } from "./order-book-row";
 // Internal helpers
 // ---------------------------------------------------------------------------
 
-function computeLevels(map: Map<string, string>, limit: number, sortAsc: boolean): PriceLevel[] {
-  const entries: [number, number][] = [];
-  for (const [p, q] of map.entries()) {
-    const qty = parseFloat(q);
-    if (qty > 0) entries.push([parseFloat(p), qty]);
-  }
-  entries.sort((a, b) => (sortAsc ? a[0] - b[0] : b[0] - a[0]));
-  const sliced = entries.slice(0, limit);
+function computeLevels(
+  map: Map<string, string>,
+  limit: number,
+  sortAsc: boolean,
+  tickSize?: number,
+): PriceLevel[] {
+  const raw: [number, number][] = tickSize
+    ? groupLevels(map, tickSize, sortAsc)
+    : (() => {
+        const entries: [number, number][] = [];
+        for (const [p, q] of map.entries()) {
+          const qty = parseFloat(q);
+          if (qty > 0) entries.push([parseFloat(p), qty]);
+        }
+        entries.sort((a, b) => (sortAsc ? a[0] - b[0] : b[0] - a[0]));
+        return entries;
+      })();
 
+  const sliced = raw.slice(0, limit);
   const maxQty = sliced.reduce((m, [, q]) => (q > m ? q : m), 0);
   let cumTotal = 0;
   return sliced.map(([price, qty]) => {
@@ -38,7 +49,7 @@ function computeLevels(map: Map<string, string>, limit: number, sortAsc: boolean
  * from object-returning selectors (Zustand Object.is equality).
  * Returns null while waiting for the initial order book snapshot (loading state).
  */
-export function useOrderBookViewState(levels = 20): OrderBookState | null {
+export function useOrderBookViewState(levels = 20, tickSize?: number): OrderBookState | null {
   // Split subscriptions so each re-renders only when its specific slice changes
   const orderBook = useMarketDataStore((s) => s.orderBook);
   const trades = useMarketDataStore((s) => s.trades);
@@ -47,8 +58,8 @@ export function useOrderBookViewState(levels = 20): OrderBookState | null {
   if (!orderBook) return null;
 
   // Bids sorted highest-first (desc); asks sorted lowest-first (asc)
-  const bids = computeLevels(orderBook.bids, levels, false);
-  const asks = computeLevels(orderBook.asks, levels, true);
+  const bids = computeLevels(orderBook.bids, levels, false, tickSize);
+  const asks = computeLevels(orderBook.asks, levels, true, tickSize);
 
   const bestBid = bids[0]?.price ?? 0;
   // asks sorted asc → index 0 = lowest price = best ask

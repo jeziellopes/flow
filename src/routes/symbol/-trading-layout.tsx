@@ -1,5 +1,6 @@
 import { lazy, Suspense, useState } from "react";
 import { toast } from "sonner";
+import { groupingOptions } from "@/domain/market-data/book-grouping";
 import { CandleChart } from "@/features/chart/candle-chart";
 import { OrderBook } from "@/features/order-book/order-book";
 import { useOrderBookViewState } from "@/features/order-book/use-order-book-data";
@@ -9,9 +10,8 @@ import { MarketTradesFeed } from "@/features/trades/market-trades-feed";
 import { MyTradesFeed } from "@/features/trades/my-trades-feed";
 import { DataPanel } from "@/features/trading/data-panel";
 import { PortfolioSummaryWidget } from "@/features/trading/portfolio-summary-widget";
-
 import { MOCK_PORTFOLIO_SUMMARY } from "@/lib/mock-data";
-import { useBaseAsset } from "@/stores/market-data";
+import { useBaseAsset, usePricePrecision, useTrades } from "@/stores/market-data";
 import { useTerminalStore } from "@/stores/terminal-store";
 import { Button } from "@/ui/button";
 import { ErrorBoundary } from "@/ui/error-boundary";
@@ -29,20 +29,83 @@ interface TerminalLayoutProps {
 // Leaf components — own their own store subscriptions so TerminalLayout
 // never re-renders due to high-frequency market data updates.
 
+type ViewMode = "both" | "bids" | "asks";
+
 interface OrderBookPanelProps {
   levels: number;
 }
 
 function OrderBookPanel({ levels }: OrderBookPanelProps) {
-  const orderBookState = useOrderBookViewState(levels);
-  return orderBookState ? (
-    <OrderBook state={orderBookState} />
-  ) : (
-    <div className="flex flex-col gap-1 p-2" data-testid="order-book-skeleton">
-      {Array.from({ length: 12 }).map((_, i) => (
-        // biome-ignore lint/suspicious/noArrayIndexKey: static skeleton
-        <div key={i} className="h-5 rounded bg-muted animate-pulse" />
-      ))}
+  const pricePrecision = usePricePrecision();
+  const options = groupingOptions(pricePrecision);
+  const [tickSize, setTickSize] = useState<number>(options[0] ?? 1);
+  const [viewMode, setViewMode] = useState<ViewMode>("both");
+
+  const raw = useOrderBookViewState(levels, tickSize);
+
+  const orderBookState = raw
+    ? {
+        ...raw,
+        bids: viewMode === "asks" ? [] : raw.bids,
+        asks: viewMode === "bids" ? [] : raw.asks,
+      }
+    : null;
+
+  const viewModes: { mode: ViewMode; label: string; title: string }[] = [
+    { mode: "both", label: "⇅", title: "Bids & Asks" },
+    { mode: "asks", label: "↑", title: "Asks only" },
+    { mode: "bids", label: "↓", title: "Bids only" },
+  ];
+
+  return (
+    <div className="flex flex-col h-full min-h-0">
+      {/* Panel controls row */}
+      <div className="flex items-center justify-between px-2 py-0.5 border-b border-border shrink-0">
+        {/* View mode toggle */}
+        <div className="flex items-center gap-0.5">
+          {viewModes.map(({ mode, label, title }) => (
+            <button
+              key={mode}
+              type="button"
+              title={title}
+              onClick={() => setViewMode(mode)}
+              className={[
+                "w-6 h-5 flex items-center justify-center rounded text-[11px] font-mono",
+                "transition-colors cursor-pointer",
+                viewMode === mode
+                  ? "bg-primary/15 text-primary"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted",
+              ].join(" ")}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        {/* Price grouping selector */}
+        <select
+          value={tickSize}
+          onChange={(e) => setTickSize(parseFloat(e.target.value))}
+          className="text-[11px] font-mono bg-transparent text-muted-foreground hover:text-foreground border border-border rounded px-1 py-0.5 cursor-pointer outline-none focus:border-primary"
+        >
+          {options.map((opt) => (
+            <option key={opt} value={opt}>
+              {opt}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Book content */}
+      {orderBookState ? (
+        <OrderBook state={orderBookState} />
+      ) : (
+        <div className="flex flex-col gap-1 p-2" data-testid="order-book-skeleton">
+          {Array.from({ length: 12 }).map((_, i) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: static skeleton
+            <div key={i} className="h-5 rounded bg-muted animate-pulse" />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
