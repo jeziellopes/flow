@@ -28,6 +28,31 @@ export type SymbolSearch = z.infer<typeof searchSchema>;
 export const Route = createFileRoute("/symbol/$symbol" as any)({
   validateSearch: (search: Record<string, unknown>): SymbolSearch => searchSchema.parse(search),
 
+  beforeLoad: ({
+    params,
+    search,
+    location,
+  }: {
+    params: { symbol: string };
+    search: SymbolSearch;
+    location: { search: string };
+  }) => {
+    const raw = new URLSearchParams(location.search);
+    // Strip legacy `levels` param and redundant `tab=book` default from URL.
+    // validateSearch already strips unknown keys from the typed search, but the
+    // browser URL is not rewritten until we throw a redirect here.
+    const hasLegacyLevels = raw.has("levels");
+    const hasDefaultTab = raw.get("tab") === "book";
+    if (hasLegacyLevels || hasDefaultTab) {
+      throw redirect({
+        to: "/symbol/$symbol" as never,
+        params: { symbol: params.symbol } as never,
+        search: search.tab && search.tab !== "book" ? { tab: search.tab } : {},
+        replace: true,
+      } as never);
+    }
+  },
+
   loader: async ({ params }: { params: { symbol: string } }): Promise<SymbolInfo> => {
     // AC-3: normalize to uppercase
     const ticker = normalizeSymbol(params.symbol);
