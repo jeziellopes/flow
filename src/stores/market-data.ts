@@ -34,7 +34,11 @@ interface MarketDataActions {
 // ---------------------------------------------------------------------------
 // RAF-batched depth update queue (AC-7)
 // Updates are queued and flushed at most once per animation frame.
+// When the tab is backgrounded, RAF pauses but the WS keeps pushing.
+// MAX_PENDING caps the queue so tab-return doesn't block the main thread.
 // ---------------------------------------------------------------------------
+
+const MAX_PENDING = 10;
 
 let pendingUpdates: NormalizedDepthUpdate[] = [];
 let rafHandle: number | null = null;
@@ -60,6 +64,18 @@ function scheduleDepthUpdate(update: NormalizedDepthUpdate): void {
   if (rafHandle === null) {
     rafHandle = requestAnimationFrame(flushDepthUpdates);
   }
+}
+
+// Drain stale queued updates when the tab becomes visible again.
+// Without this, a backgrounded WS floods pendingUpdates[] (RAF is paused
+// while hidden) and the synchronous flush on tab-return blocks the main thread.
+if (typeof document !== "undefined") {
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible" && pendingUpdates.length > MAX_PENDING) {
+      // Keep only the most recent MAX_PENDING updates — older ones are stale.
+      pendingUpdates = pendingUpdates.slice(-MAX_PENDING);
+    }
+  });
 }
 
 // ---------------------------------------------------------------------------
