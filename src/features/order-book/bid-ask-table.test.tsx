@@ -40,9 +40,14 @@ describe("AskTable", () => {
     expect(text).toContain("42506");
   });
 
-  it("renders levels in correct order (lowest price first)", () => {
+  it("renders levels in correct visual order (highest price first → best ask at bottom)", () => {
     const { container } = render(<AskTable levels={mockAsks} />);
-    const rows = container.querySelectorAll("[class*='grid-cols-3']");
-    expect(rows.length).toBeGreaterThan(0);
+    // Row structure: DepthBar (absolute) + price div + qty div + total div
+    // price is the 2nd child (index 1) in each grid row
+    const priceEls = container.querySelectorAll("[class*='grid-cols-3'] > div:nth-child(2)");
+    const prices = Array.from(priceEls).map((c) => c.textContent?.trim());
+    // DOM order should be descending (highest first) so best ask ends at bottom near spread
+    expect(prices[0]).toContain("42506");
+    expect(prices[2]).toContain("42504");
   });
 });

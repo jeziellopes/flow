@@ -16,10 +16,11 @@ export function BidTable({ levels }: TableProps) {
 }
 
 export function AskTable({ levels }: TableProps) {
-  // Asks arrive lowest-first (asc) from useOrderBookViewState — nearest spread at bottom
+  // Asks arrive lowest-first (asc) — reverse so highest price is at top,
+  // best ask (lowest) sits at the bottom adjacent to the spread (Binance style).
   return (
     <div className="space-y-px">
-      {levels.map((level) => (
+      {[...levels].reverse().map((level) => (
         <OrderBookRow key={`ask-${level.price}`} level={level} side="ask" />
       ))}
     </div>
