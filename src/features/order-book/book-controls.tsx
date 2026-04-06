@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { Button } from "@/ui/button";
 import { GroupingSelect } from "./grouping-select";
 import type { ViewMode } from "./use-order-book-panel-state";
 
@@ -26,21 +27,20 @@ function ViewModeToggle({ value, onChange }: ViewModeToggleProps) {
   return (
     <div className="flex items-center gap-0.5">
       {VIEW_OPTIONS.map(({ mode, title }) => (
-        <button
+        <Button
           key={mode}
           type="button"
+          intent="segment"
+          size="xs"
           title={title}
           onClick={() => onChange(mode)}
           className={cn(
-            "h-6 px-1.5 flex items-center gap-px rounded text-[9px] font-mono tabular-nums",
-            "transition-colors cursor-pointer select-none",
-            value === mode
-              ? "bg-primary/15 ring-1 ring-primary/30 text-foreground"
-              : "text-muted-foreground hover:bg-muted hover:text-foreground",
+            "gap-px font-mono tabular-nums",
+            value === mode && "bg-primary/15 ring-1 ring-primary/30 text-foreground",
           )}
         >
           <ViewModeIcon mode={mode} active={value === mode} />
-        </button>
+        </Button>
       ))}
     </div>
   );
@@ -50,24 +50,24 @@ function ViewModeIcon({ mode, active }: { mode: ViewMode; active: boolean }) {
   if (mode === "both") {
     return (
       <>
-        <span className={cn(active ? "text-trading-bid" : "inherit")}>■</span>
-        <span className={cn(active ? "text-trading-ask" : "inherit")}>■</span>
+        <span className={active ? "text-trading-bid" : undefined}>■</span>
+        <span className={active ? "text-trading-ask" : undefined}>■</span>
       </>
     );
   }
   if (mode === "bids") {
     return (
       <>
-        <span className={cn(active ? "text-trading-bid" : "inherit")}>■</span>
-        <span className={cn(active ? "text-trading-bid" : "inherit")}>■</span>
+        <span className={active ? "text-trading-bid" : undefined}>■</span>
+        <span className={active ? "text-trading-bid" : undefined}>■</span>
       </>
     );
   }
   // asks
   return (
     <>
-      <span className={cn(active ? "text-trading-ask" : "inherit")}>■</span>
-      <span className={cn(active ? "text-trading-ask" : "inherit")}>■</span>
+      <span className={active ? "text-trading-ask" : undefined}>■</span>
+      <span className={active ? "text-trading-ask" : undefined}>■</span>
     </>
   );
 }
