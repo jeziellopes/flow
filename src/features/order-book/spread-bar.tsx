@@ -13,7 +13,7 @@ export function SpreadBar({ spread, lastPrice, tickDirection = "neutral" }: Spre
   const tickColor = {
     up: "text-trading-tick-up",
     down: "text-trading-tick-down",
-    neutral: "text-foreground",
+    neutral: "text-muted-foreground",
   }[tickDirection];
 
   return (
