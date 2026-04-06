@@ -75,7 +75,48 @@ export function OrderBook({ state, children }: OrderBookProps) {
   );
 }
 
+// ---------------------------------------------------------------------------
+// Explicit view variants — compose sub-components, no boolean conditionals
+// ---------------------------------------------------------------------------
+
+/** Bids + Asks, spread in the middle. Default Binance-style layout. */
+function OrderBookBothView({ state }: { state: OrderBookState }) {
+  return (
+    <OrderBook state={state}>
+      <OrderBook.ConnectionBanner />
+      <OrderBook.Asks />
+      <OrderBook.Spread />
+      <OrderBook.Bids />
+    </OrderBook>
+  );
+}
+
+/** Asks only — spread shown below as last-price reference. */
+function OrderBookAsksView({ state }: { state: OrderBookState }) {
+  return (
+    <OrderBook state={state}>
+      <OrderBook.ConnectionBanner />
+      <OrderBook.Asks />
+      <OrderBook.Spread />
+    </OrderBook>
+  );
+}
+
+/** Bids only — spread shown above as last-price reference. */
+function OrderBookBidsView({ state }: { state: OrderBookState }) {
+  return (
+    <OrderBook state={state}>
+      <OrderBook.ConnectionBanner />
+      <OrderBook.Spread />
+      <OrderBook.Bids />
+    </OrderBook>
+  );
+}
+
 OrderBook.Asks = OrderBookAsks;
 OrderBook.Bids = OrderBookBids;
 OrderBook.Spread = OrderBookSpread;
 OrderBook.ConnectionBanner = OrderBookConnectionBanner;
+OrderBook.BothView = OrderBookBothView;
+OrderBook.AsksView = OrderBookAsksView;
+OrderBook.BidsView = OrderBookBidsView;
