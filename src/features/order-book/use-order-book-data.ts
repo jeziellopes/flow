@@ -1,7 +1,7 @@
+import { useDeferredValue } from "react";
 import { groupLevels } from "@/domain/market-data/book-grouping";
 import { useMarketDataStore } from "@/stores/market-data";
-import type { OrderBookState } from "./order-book";
-import type { PriceLevel } from "./order-book-row";
+import type { OrderBookState, PriceLevel } from "./types";
 
 // ---------------------------------------------------------------------------
 // Internal helpers
@@ -51,9 +51,15 @@ function computeLevels(
  */
 export function useOrderBookViewState(levels = 20, tickSize?: number): OrderBookState | null {
   // Split subscriptions so each re-renders only when its specific slice changes
-  const orderBook = useMarketDataStore((s) => s.orderBook);
-  const trades = useMarketDataStore((s) => s.trades);
+  const rawOrderBook = useMarketDataStore((s) => s.orderBook);
+  // Deferred: allows React to yield to higher-priority interactions (scroll, input)
+  // during high-frequency book updates (AC-10: 60fps at >10/sec)
+  const orderBook = useDeferredValue(rawOrderBook);
   const connectionStatus = useMarketDataStore((s) => s.connectionStatus);
+  // Scalar subscriptions — avoid re-rendering on every trade event when only
+  // the price value matters for tick direction (decouples from full trades array)
+  const lastTradePrice = useMarketDataStore((s) => s.trades[0]?.price ?? null);
+  const prevTradePrice = useMarketDataStore((s) => s.trades[1]?.price ?? null);
 
   if (!orderBook) return null;
 
@@ -68,8 +74,8 @@ export function useOrderBookViewState(levels = 20, tickSize?: number): OrderBook
   const spreadAmount = Math.max(0, bestAsk - bestBid);
   const spreadPercent = bestBid > 0 ? (spreadAmount / bestBid) * 100 : 0;
 
-  const lastPrice = trades[0] ? parseFloat(trades[0].price) : bestBid;
-  const prevPrice = trades[1] ? parseFloat(trades[1].price) : lastPrice;
+  const lastPrice = lastTradePrice ? parseFloat(lastTradePrice) : bestBid;
+  const prevPrice = prevTradePrice ? parseFloat(prevTradePrice) : lastPrice;
   const lastPriceTick: "up" | "down" | "neutral" =
     lastPrice > prevPrice ? "up" : lastPrice < prevPrice ? "down" : "neutral";
 

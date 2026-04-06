@@ -1,20 +1,10 @@
 import { createContext, type ReactNode, use } from "react";
 import { AskTable, BidTable } from "./bid-ask-table";
 import { ConnectionBanner } from "./connection-banner";
-import type { PriceLevel } from "./order-book-row";
 import { SpreadBar } from "./spread-bar";
+import type { OrderBookState } from "./types";
 
-export interface OrderBookState {
-  bids: PriceLevel[];
-  asks: PriceLevel[];
-  bestBid: number;
-  bestAsk: number;
-  lastPrice: number;
-  spreadAmount: number;
-  spreadPercent: number;
-  connectionStatus: "connected" | "reconnecting" | "disconnected";
-  lastPriceTick?: "up" | "down" | "neutral";
-}
+export type { OrderBookState } from "./types";
 
 interface OrderBookProps {
   state: OrderBookState;

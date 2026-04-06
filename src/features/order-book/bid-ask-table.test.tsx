@@ -1,7 +1,7 @@
 import { render } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { AskTable, BidTable } from "./bid-ask-table";
-import type { PriceLevel } from "./order-book-row";
+import type { PriceLevel } from "./types";
 
 describe("BidTable", () => {
   const mockBids: PriceLevel[] = [

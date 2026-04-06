@@ -13,8 +13,8 @@ describe("OrderBookRow", () => {
   it("renders price, quantity, and total", () => {
     render(<OrderBookRow level={mockLevel} side="bid" />);
     expect(screen.getByText("42500.50")).toBeInTheDocument();
-    expect(screen.getByText("2.5")).toBeInTheDocument();
-    expect(screen.getByText("106251.25")).toBeInTheDocument();
+    expect(screen.getByText("2.5000")).toBeInTheDocument();
+    expect(screen.getByText("106251.2500")).toBeInTheDocument();
   });
 
   it("applies bid styling to side=bid", () => {
@@ -52,5 +52,11 @@ describe("OrderBookRow", () => {
     const level = { ...mockLevel, price: 42500.123 };
     render(<OrderBookRow level={level} side="bid" />);
     expect(screen.getByText("42500.12")).toBeInTheDocument();
+  });
+
+  it("formats quantities with 4 decimal places (default qtyPrecision)", () => {
+    const level = { ...mockLevel, quantity: 1.5 };
+    render(<OrderBookRow level={level} side="bid" />);
+    expect(screen.getByText("1.5000")).toBeInTheDocument();
   });
 });
