@@ -1,5 +1,5 @@
-import { useId } from "react";
-import { Select } from "@/ui/select";
+import { cn } from "@/lib/utils";
+import { Dropdown } from "@/ui/dropdown";
 
 interface GroupingSelectProps {
   value: number;
@@ -8,34 +8,34 @@ interface GroupingSelectProps {
 }
 
 /**
- * Compact price-grouping selector for the order book controls bar.
- * Uses the DS Select primitive with a compact size override (h-6, text-[10px]).
- * Renders its own inline label so it can be dropped into any flex row.
+ * Compact price-grouping dropdown for the order book controls bar.
+ * Uses the DS Dropdown primitive — consistent focus, keyboard, and click-outside handling.
  */
 export function GroupingSelect({ value, options, onChange }: GroupingSelectProps) {
-  const id = useId();
-
   return (
-    <div className="flex items-center gap-1.5">
-      <label
-        htmlFor={id}
-        className="font-mono text-[10px] text-muted-foreground cursor-default select-none"
+    <Dropdown.Root className="flex items-center gap-1.5">
+      <span className="font-mono text-[10px] text-muted-foreground select-none">Group</span>
+
+      <Dropdown.Trigger
+        className={cn(
+          "h-6 px-1.5 flex items-center gap-1 font-mono text-[10px] tabular-nums",
+          "rounded border border-input bg-input text-foreground",
+          "cursor-pointer transition-colors select-none",
+          "hover:border-ring/60",
+          "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--primary)]",
+        )}
       >
-        Group
-      </label>
-      <Select
-        id={id}
-        value={value}
-        onChange={(e) => onChange(parseFloat(e.target.value))}
-        className="h-6 w-auto text-[10px] font-mono px-1 py-0"
-        aria-label="Price grouping"
-      >
+        <span>{value}</span>
+        <span className="text-[8px] text-muted-foreground">▾</span>
+      </Dropdown.Trigger>
+
+      <Dropdown.Menu align="right" className="text-[10px] font-mono tabular-nums">
         {options.map((opt) => (
-          <option key={opt} value={opt}>
+          <Dropdown.Item key={opt} onSelect={() => onChange(opt)} active={opt === value}>
             {opt}
-          </option>
+          </Dropdown.Item>
         ))}
-      </Select>
-    </div>
+      </Dropdown.Menu>
+    </Dropdown.Root>
   );
 }
