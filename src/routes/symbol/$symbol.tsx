@@ -13,9 +13,9 @@ import { TerminalLayout } from "./-trading-layout";
 // Search params schema (AC-4, AC-5)
 // ---------------------------------------------------------------------------
 
+// tab is optional — omitted from URL when at default ("book") for clean links.
 const searchSchema = z.object({
-  tab: z.enum(["book", "trades", "depth"]).catch("book"),
-  levels: z.number().int().min(5).max(100).catch(20),
+  tab: z.enum(["book", "trades", "depth"]).optional(),
 });
 
 export type SymbolSearch = z.infer<typeof searchSchema>;
@@ -27,6 +27,23 @@ export type SymbolSearch = z.infer<typeof searchSchema>;
 // biome-ignore lint/suspicious/noExplicitAny: TanStack Router codegen pending
 export const Route = createFileRoute("/symbol/$symbol" as any)({
   validateSearch: (search: Record<string, unknown>): SymbolSearch => searchSchema.parse(search),
+
+  beforeLoad: ({ params, search, location }) => {
+    const raw = new URLSearchParams(location.searchStr);
+    // Strip legacy `levels` param and redundant `tab=book` default from URL.
+    // validateSearch already strips unknown keys from the typed search, but the
+    // browser URL is not rewritten until we throw a redirect here.
+    const hasLegacyLevels = raw.has("levels");
+    const hasDefaultTab = raw.get("tab") === "book";
+    if (hasLegacyLevels || hasDefaultTab) {
+      throw redirect({
+        to: "/symbol/$symbol" as never,
+        params: { symbol: params.symbol } as never,
+        search: search.tab && search.tab !== "book" ? { tab: search.tab } : {},
+        replace: true,
+      } as never);
+    }
+  },
 
   loader: async ({ params }: { params: { symbol: string } }): Promise<SymbolInfo> => {
     // AC-3: normalize to uppercase
@@ -79,17 +96,18 @@ export const Route = createFileRoute("/symbol/$symbol" as any)({
 
 function RouteComponent() {
   const meta = Route.useLoaderData() as SymbolInfo;
-  const { tab, levels } = Route.useSearch() as SymbolSearch;
+  const { tab: tabParam } = Route.useSearch() as SymbolSearch;
+  const tab = tabParam ?? "book";
 
-  // AC-4, AC-5: sync UI store from URL search params
-  useUIStore.getState().syncFromSearch(tab, levels);
+  // Sync UI store from URL search params (for deep-tree components)
+  useUIStore.getState().syncFromSearch(tab);
 
   return (
     <ErrorBoundary>
       <title>
         {meta.base}/{meta.quote} | Flow
       </title>
-      <TerminalLayout symbol={meta.symbol} tab={tab} levels={levels} />
+      <TerminalLayout symbol={meta.symbol} tab={tab} />
     </ErrorBoundary>
   );
 }

@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { usePricePrecision } from "@/stores/market-data";
 
 interface SpreadBarProps {
   spread: { amount: number; percent: number };
@@ -7,6 +8,7 @@ interface SpreadBarProps {
 }
 
 export function SpreadBar({ spread, lastPrice, tickDirection = "neutral" }: SpreadBarProps) {
+  const pricePrecision = usePricePrecision();
   const tickIcon = tickDirection === "up" ? "↑" : tickDirection === "down" ? "↓" : "–";
   const tickColor = {
     up: "text-trading-tick-up",
@@ -21,10 +23,10 @@ export function SpreadBar({ spread, lastPrice, tickDirection = "neutral" }: Spre
       )}
     >
       <span>
-        Spread: {spread.amount.toFixed(2)} ({spread.percent.toFixed(4)}%)
+        Spread: {spread.amount.toFixed(pricePrecision)} ({spread.percent.toFixed(4)}%)
       </span>
       <span className={cn("text-foreground font-medium", tickColor)}>
-        <span>{tickIcon}</span> {lastPrice.toFixed(2)}
+        <span>{tickIcon}</span> {lastPrice.toFixed(pricePrecision)}
       </span>
     </div>
   );

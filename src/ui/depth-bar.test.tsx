@@ -18,7 +18,7 @@ describe("DepthBar", () => {
   it("applies ask styling", () => {
     const { container } = render(<DepthBar percent={55} side="ask" />);
     const bar = container.querySelector("div");
-    expect(bar).toHaveClass("left-0", "bg-trading-ask");
+    expect(bar).toHaveClass("right-0", "bg-trading-ask");
   });
 
   it("sets width as inline style from percent", () => {
