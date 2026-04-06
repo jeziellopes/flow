@@ -1,3 +1,10 @@
+# [1.1.0-next.8](https://github.com/jeziellopes/flow/compare/v1.1.0-next.7...v1.1.0-next.8) (2026-04-06)
+
+
+### Features
+
+* **order-book:** price grouping dropdown + view mode toggle ([#109](https://github.com/jeziellopes/flow/issues/109)) ([0c89887](https://github.com/jeziellopes/flow/commit/0c89887e9395e75ee50a80870cd2d6f8460374c8))
+
 # [1.1.0-next.7](https://github.com/jeziellopes/flow/compare/v1.1.0-next.6...v1.1.0-next.7) (2026-04-06)
 
 
