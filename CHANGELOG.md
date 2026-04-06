@@ -1,3 +1,21 @@
+# [1.1.0-next.11](https://github.com/jeziellopes/flow/compare/v1.1.0-next.10...v1.1.0-next.11) (2026-04-06)
+
+
+### Bug Fixes
+
+* **order-book:** depth bar fills right-to-left on both bid and ask sides ([2d245ba](https://github.com/jeziellopes/flow/commit/2d245ba41f785ed67e9efe558e0a2dc5e91505df))
+* **order-book:** fix NaN bucketing, correct grouping options, move controls out of drag area ([107d942](https://github.com/jeziellopes/flow/commit/107d942232e73b2de1036838c8228bd7675d9569))
+* **order-book:** remove levels URL param, show 50 rows, clean tab param ([1a2beea](https://github.com/jeziellopes/flow/commit/1a2beea70041aee43b92f190a606dec3efca5b01))
+* **order-book:** replace aria-hidden with role=presentation on SVGs, remove stale Binance reference block ([be2084f](https://github.com/jeziellopes/flow/commit/be2084ffe8c9d081efd36905e577c847c62975bf))
+* **order-book:** reverse asks display order so best ask sits nearest spread ([065d02a](https://github.com/jeziellopes/flow/commit/065d02ab2df18674d2b0ffcb013feb1b195389c0))
+* **routing:** redirect legacy ?tab=book&levels params to clean URL ([187bad9](https://github.com/jeziellopes/flow/commit/187bad9d6444f93d4eb077549e43f38fb3b888a2))
+* **routing:** use location.searchStr in beforeLoad, align typecheck with build ([6ba9652](https://github.com/jeziellopes/flow/commit/6ba9652e2ab5351abe837660fa88707ef34d9bb0))
+
+
+### Features
+
+* **ui:** add Dropdown primitive; refactor GroupingSelect to use it ([cc3e312](https://github.com/jeziellopes/flow/commit/cc3e3128090f681891c9e2f338541cf343c5fd6a))
+
 # [1.1.0-next.10](https://github.com/jeziellopes/flow/compare/v1.1.0-next.9...v1.1.0-next.10) (2026-04-06)
 
 
