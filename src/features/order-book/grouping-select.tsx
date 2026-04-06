@@ -22,7 +22,7 @@ export function GroupingSelect({ value, options, onChange }: GroupingSelectProps
           "rounded border border-input bg-input text-foreground",
           "cursor-pointer transition-colors select-none",
           "hover:border-ring/60",
-          "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--primary)]",
+          "focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary]",
         )}
       >
         <span>{value}</span>
