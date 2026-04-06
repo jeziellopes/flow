@@ -14,8 +14,8 @@ interface ViewOption {
 
 const VIEW_OPTIONS: ViewOption[] = [
   { mode: "both", title: "Bids & Asks" },
-  { mode: "asks", title: "Asks only" },
   { mode: "bids", title: "Bids only" },
+  { mode: "asks", title: "Asks only" },
 ];
 
 interface ViewModeToggleProps {
@@ -34,49 +34,84 @@ function ViewModeToggle({ value, onChange }: ViewModeToggleProps) {
           size="icon"
           title={title}
           onClick={() => onChange(mode)}
-          className={cn(
-            "flex-col gap-0",
-            value === mode && "bg-primary/15 ring-1 ring-primary/30 text-foreground",
-          )}
+          className={cn(value === mode ? "opacity-100" : "opacity-40 hover:opacity-70")}
         >
-          <ViewModeIcon mode={mode} active={value === mode} />
+          <ViewModeIcon mode={mode} />
         </Button>
       ))}
     </div>
   );
 }
 
-function ViewModeIcon({ mode, active }: { mode: ViewMode; active: boolean }) {
+// SVG icons replicate Binance's order book type buttons exactly.
+// Left column = side color indicator; right column = 3 neutral data rows.
+// DS tokens: trading-bid (Buy), trading-ask (Sell), currentColor (IconNormal).
+function ViewModeIcon({ mode }: { mode: ViewMode }) {
   if (mode === "both") {
     return (
-      <>
-        <span className={cn("text-[7px] leading-none text-trading-ask")}>■</span>
-        <span className={cn("text-[7px] leading-none text-trading-bid")}>■</span>
-      </>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="14"
+        height="14"
+        viewBox="0 0 16 16"
+        fill="none"
+        role="presentation"
+      >
+        {/* Left col: top = ask, bottom = bid */}
+        <path d="M2.667 2.667H7.333V7.333H2.667z" fill="var(--trading-ask)" />
+        <path d="M2.667 8.667H7.333V13.333H2.667z" fill="var(--trading-bid)" />
+        {/* Right col: 3 neutral rows */}
+        <path
+          fillRule="evenodd"
+          clipRule="evenodd"
+          d="M8.667 2.667H13.333V5.333H8.667zM8.667 6.667H13.333V9.333H8.667zM13.333 10.667H8.667V13.333H13.333z"
+          fill="currentColor"
+        />
+      </svg>
     );
   }
   if (mode === "bids") {
     return (
-      <>
-        <span className={cn("text-[7px] leading-none", active ? "text-trading-bid" : undefined)}>
-          ■
-        </span>
-        <span className={cn("text-[7px] leading-none", active ? "text-trading-bid" : undefined)}>
-          ■
-        </span>
-      </>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="14"
+        height="14"
+        viewBox="0 0 16 16"
+        fill="none"
+        role="presentation"
+      >
+        {/* Left col: full bid */}
+        <path d="M2.667 2.667H7.333V13.333H2.667z" fill="var(--trading-bid)" />
+        {/* Right col: 3 neutral rows */}
+        <path
+          fillRule="evenodd"
+          clipRule="evenodd"
+          d="M8.667 2.667H13.333V5.333H8.667zM8.667 6.667H13.333V9.333H8.667zM13.333 10.667H8.667V13.333H13.333z"
+          fill="currentColor"
+        />
+      </svg>
     );
   }
   // asks
   return (
-    <>
-      <span className={cn("text-[7px] leading-none", active ? "text-trading-ask" : undefined)}>
-        ■
-      </span>
-      <span className={cn("text-[7px] leading-none", active ? "text-trading-ask" : undefined)}>
-        ■
-      </span>
-    </>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="14"
+      height="14"
+      viewBox="0 0 16 16"
+      fill="none"
+      role="presentation"
+    >
+      {/* Left col: full ask */}
+      <path d="M2.667 2.667H7.333V13.333H2.667z" fill="var(--trading-ask)" />
+      {/* Right col: 3 neutral rows */}
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M8.667 2.667H13.333V5.333H8.667zM8.667 6.667H13.333V9.333H8.667zM13.333 10.667H8.667V13.333H13.333z"
+        fill="currentColor"
+      />
+    </svg>
   );
 }
 
