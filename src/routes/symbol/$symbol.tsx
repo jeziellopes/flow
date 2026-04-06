@@ -13,9 +13,9 @@ import { TerminalLayout } from "./-trading-layout";
 // Search params schema (AC-4, AC-5)
 // ---------------------------------------------------------------------------
 
+// tab is optional — omitted from URL when at default ("book") for clean links.
 const searchSchema = z.object({
-  tab: z.enum(["book", "trades", "depth"]).catch("book"),
-  levels: z.number().int().min(5).max(100).catch(20),
+  tab: z.enum(["book", "trades", "depth"]).optional(),
 });
 
 export type SymbolSearch = z.infer<typeof searchSchema>;
@@ -79,17 +79,18 @@ export const Route = createFileRoute("/symbol/$symbol" as any)({
 
 function RouteComponent() {
   const meta = Route.useLoaderData() as SymbolInfo;
-  const { tab, levels } = Route.useSearch() as SymbolSearch;
+  const { tab: tabParam } = Route.useSearch() as SymbolSearch;
+  const tab = tabParam ?? "book";
 
-  // AC-4, AC-5: sync UI store from URL search params
-  useUIStore.getState().syncFromSearch(tab, levels);
+  // Sync UI store from URL search params (for deep-tree components)
+  useUIStore.getState().syncFromSearch(tab);
 
   return (
     <ErrorBoundary>
       <title>
         {meta.base}/{meta.quote} | Flow
       </title>
-      <TerminalLayout symbol={meta.symbol} tab={tab} levels={levels} />
+      <TerminalLayout symbol={meta.symbol} tab={tab} />
     </ErrorBoundary>
   );
 }

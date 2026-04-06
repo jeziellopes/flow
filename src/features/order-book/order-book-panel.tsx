@@ -7,10 +7,6 @@ import { useOrderBookViewState } from "./use-order-book-data";
 
 type ViewMode = "both" | "bids" | "asks";
 
-interface OrderBookPanelProps {
-  levels?: number;
-}
-
 const VIEW_MODES: { mode: ViewMode; title: string; icon: React.ReactNode }[] = [
   {
     mode: "both",
@@ -44,7 +40,8 @@ const VIEW_MODES: { mode: ViewMode; title: string; icon: React.ReactNode }[] = [
   },
 ];
 
-export function OrderBookPanel({ levels = 20 }: OrderBookPanelProps) {
+export function OrderBookPanel() {
+  const levels = 50;
   const pricePrecision = usePricePrecision();
   const options = useMemo(() => groupingOptions(pricePrecision), [pricePrecision]);
   const [tickSize, setTickSize] = useState<number>(options[0] ?? 1);

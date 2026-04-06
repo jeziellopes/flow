@@ -21,7 +21,6 @@ const TerminalGrid = lazy(() => import("@/features/trading/trading-grid"));
 interface TerminalLayoutProps {
   symbol: string;
   tab?: "book" | "trades" | "depth";
-  levels?: number;
 }
 
 /** Leaf — owns useTrades() subscription; never causes TerminalLayout to re-render. */
@@ -43,7 +42,7 @@ function MyTradesPanel() {
   return <MyTradesFeed fills={fills} />;
 }
 
-export function TerminalLayout({ symbol, tab = "book", levels = 20 }: TerminalLayoutProps) {
+export function TerminalLayout({ symbol, tab = "book" }: TerminalLayoutProps) {
   const [orderSubmitting, setOrderSubmitting] = useState(false);
   const {
     layouts,
@@ -127,7 +126,7 @@ export function TerminalLayout({ symbol, tab = "book", levels = 20 }: TerminalLa
           >
             <div key="book">
               <ErrorBoundary>
-                <OrderBookPanel levels={levels} />
+                <OrderBookPanel />
               </ErrorBoundary>
             </div>
             <div key="chart">
