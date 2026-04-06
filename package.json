@@ -18,7 +18,7 @@
     "lint:fix": "biome check --write src/ && eslint src/ --fix",
     "format": "biome format --write src/",
     "check": "biome check src/",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc -b",
     "tokens": "tsx scripts/build-tokens.ts",
     "contrast": "tsx scripts/check-contrast.ts",
     "audit:colors": "tsx scripts/audit-colors.ts"

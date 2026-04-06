@@ -28,16 +28,8 @@ export type SymbolSearch = z.infer<typeof searchSchema>;
 export const Route = createFileRoute("/symbol/$symbol" as any)({
   validateSearch: (search: Record<string, unknown>): SymbolSearch => searchSchema.parse(search),
 
-  beforeLoad: ({
-    params,
-    search,
-    location,
-  }: {
-    params: { symbol: string };
-    search: SymbolSearch;
-    location: { search: string };
-  }) => {
-    const raw = new URLSearchParams(location.search);
+  beforeLoad: ({ params, search, location }) => {
+    const raw = new URLSearchParams(location.searchStr);
     // Strip legacy `levels` param and redundant `tab=book` default from URL.
     // validateSearch already strips unknown keys from the typed search, but the
     // browser URL is not rewritten until we throw a redirect here.
