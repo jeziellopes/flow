@@ -10,6 +10,9 @@ import type { StreamMessage } from "./schemas";
 import { fetchDepthSnapshot } from "./snapshot";
 import { createWsClient } from "./ws-client";
 
+/** Maximum number of snapshot re-fetches before giving up and triggering a full reconnect. */
+const MAX_SNAPSHOT_RETRIES = 3;
+
 /**
  * Implements MarketDataSource against the Binance public WebSocket and REST APIs.
  *
@@ -72,8 +75,22 @@ export class BinanceDataSource implements MarketDataSource {
     this.depthBuffer = [];
   }
 
-  async getSnapshot(symbol: string): Promise<NormalizedSnapshot> {
+  async getSnapshot(symbol: string, _retries = 0): Promise<NormalizedSnapshot> {
     const snapshot = await fetchDepthSnapshot(symbol);
+
+    // Binance step 4: if snapshot is older than the first buffered event's U,
+    // the snapshot doesn't cover our buffer — re-fetch (with retry guard).
+    const firstBuffered = this.depthBuffer[0];
+    if (firstBuffered && snapshot.sequenceId < firstBuffered.firstSequenceId) {
+      if (_retries >= MAX_SNAPSHOT_RETRIES) {
+        // Snapshot keeps arriving stale — network issue or extreme lag.
+        // Fall through to reconnect so the stream restarts cleanly.
+        this.handleDisconnect();
+        return snapshot;
+      }
+      return this.getSnapshot(symbol, _retries + 1);
+    }
+
     // Flush the buffer: discard stale events, deliver valid ones (AC-3)
     this.snapshotSeqId = snapshot.sequenceId;
     const buffered = this.depthBuffer;
@@ -115,10 +132,15 @@ export class BinanceDataSource implements MarketDataSource {
       if (this.snapshotSeqId === null) {
         // Buffer until snapshot is applied
         this.depthBuffer.push(update);
-      } else if (update.lastSequenceId > this.snapshotSeqId) {
+      } else if (update.lastSequenceId <= this.snapshotSeqId) {
+        // Stale event — discard (AC-3)
+      } else if (update.firstSequenceId > this.snapshotSeqId + 1) {
+        // Binance update rule 2: gap detected — missed events, must restart
+        this.handleDisconnect();
+      } else {
         this.emitDepthUpdate(update);
+        this.snapshotSeqId = update.lastSequenceId;
       }
-      // else: stale event — discard (AC-3)
     } else if (msg.e === "trade") {
       const trade: NormalizedTrade = {
         id: String(msg.t),

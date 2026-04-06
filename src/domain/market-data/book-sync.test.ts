@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { applyDepthUpdate, bookFromSnapshot } from "./book-sync";
+import { applyDepthUpdate, bookFromSnapshot, detectGap } from "./book-sync";
 import type { NormalizedDepthUpdate, NormalizedSnapshot } from "./normalized";
 
 const SNAPSHOT: NormalizedSnapshot = {
@@ -152,5 +152,37 @@ describe("applyDepthUpdate — sequential merging", () => {
     );
     expect(book.bids.has("49900.00")).toBe(false);
     expect(book.lastUpdateId).toBe(103);
+  });
+});
+
+describe("detectGap", () => {
+  it("returns false when firstSequenceId === lastUpdateId + 1 (next expected event)", () => {
+    const book = bookFromSnapshot(SNAPSHOT); // lastUpdateId = 100
+    const update = makeUpdate({ firstSeq: 101, lastSeq: 101 });
+    expect(detectGap(book, update)).toBe(false);
+  });
+
+  it("returns false when firstSequenceId === lastUpdateId (overlapping — acceptable per Binance)", () => {
+    const book = bookFromSnapshot(SNAPSHOT); // lastUpdateId = 100
+    const update = makeUpdate({ firstSeq: 100, lastSeq: 101 });
+    expect(detectGap(book, update)).toBe(false);
+  });
+
+  it("returns false when firstSequenceId < lastUpdateId (stale — caller should discard)", () => {
+    const book = bookFromSnapshot(SNAPSHOT); // lastUpdateId = 100
+    const update = makeUpdate({ firstSeq: 99, lastSeq: 100 });
+    expect(detectGap(book, update)).toBe(false);
+  });
+
+  it("returns true when firstSequenceId > lastUpdateId + 1 (gap — missed events)", () => {
+    const book = bookFromSnapshot(SNAPSHOT); // lastUpdateId = 100
+    const update = makeUpdate({ firstSeq: 102, lastSeq: 103 });
+    expect(detectGap(book, update)).toBe(true);
+  });
+
+  it("returns true for a large gap (multiple missed events)", () => {
+    const book = bookFromSnapshot(SNAPSHOT); // lastUpdateId = 100
+    const update = makeUpdate({ firstSeq: 200, lastSeq: 210 });
+    expect(detectGap(book, update)).toBe(true);
   });
 });

@@ -16,7 +16,7 @@ export function GroupingSelect({ value, options, onChange }: GroupingSelectProps
     <Dropdown.Root className="flex items-center gap-1.5">
       <Dropdown.Trigger
         className={cn(
-          "h-6 px-1.5 flex items-center gap-1 font-mono text-[13px] text-muted-foreground tabular-nums",
+          "h-6 px-1.5 flex items-center gap-1 font-mono text-[12px] text-muted-foreground tabular-nums",
           "rounded hover:bg-input",
           "cursor-pointer transition-colors select-none",
           "hover:border-ring/60",
@@ -27,7 +27,7 @@ export function GroupingSelect({ value, options, onChange }: GroupingSelectProps
         <span className="text-[8px] text-muted-foreground">▾</span>
       </Dropdown.Trigger>
 
-      <Dropdown.Menu align="right" className="text-[13px] font-mono tabular-nums">
+      <Dropdown.Menu align="right" className="text-[12px] font-mono tabular-nums">
         {options.map((opt) => (
           <Dropdown.Item key={opt} onSelect={() => onChange(opt)} active={opt === value}>
             {opt}
