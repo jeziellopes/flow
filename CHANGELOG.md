@@ -1,3 +1,10 @@
+# [1.1.0-next.9](https://github.com/jeziellopes/flow/compare/v1.1.0-next.8...v1.1.0-next.9) (2026-04-06)
+
+
+### Performance Improvements
+
+* **tab:** fix blank screen and frozen UI on tab return ([e10f617](https://github.com/jeziellopes/flow/commit/e10f6173edbcafb65917c5a9fd7af94134104e60)), closes [#113](https://github.com/jeziellopes/flow/issues/113)
+
 # [1.1.0-next.8](https://github.com/jeziellopes/flow/compare/v1.1.0-next.7...v1.1.0-next.8) (2026-04-06)
 
 
