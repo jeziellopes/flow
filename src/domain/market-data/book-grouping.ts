@@ -6,11 +6,19 @@
 
 /**
  * Bucket a price into the nearest tick boundary (floor).
- * Uses integer rounding to avoid floating-point drift.
+ *
+ * Two strategies to avoid floating-point drift:
+ *  - tickSize < 1: multiply by integer inverse (e.g. 0.1 → ×10)
+ *  - tickSize ≥ 1: divide and multiply (safe for integer tick sizes)
  *
  * @example bucketPrice(100.15, 0.1) → 100.1
+ * @example bucketPrice(50012,   10) → 50010
+ * @example bucketPrice(50075,   50) → 50050
  */
 function bucketPrice(price: number, tickSize: number): number {
+  if (tickSize >= 1) {
+    return Math.floor(price / tickSize) * tickSize;
+  }
   const inv = Math.round(1 / tickSize);
   return Math.floor(price * inv) / inv;
 }
@@ -44,12 +52,19 @@ export function groupLevels(
 }
 
 /**
- * Derive the set of available grouping options for a symbol given its
- * price precision (decimal places).
+ * Meaningful price grouping options for a symbol given its price precision.
+ * Based on Binance-style groupings scaled to the symbol's tick size.
  *
- * @example groupingOptions(2) → [0.1, 1, 10, 100]   (BTCUSDT)
- * @example groupingOptions(4) → [0.001, 0.01, 0.1, 1] (smaller pairs)
+ * Base set (precision=2, e.g. BTCUSDT): [0.1, 1, 10, 50, 100, 1000]
+ * Scales by 10^(2−precision) for other precisions.
+ *
+ * @example groupingOptions(2) → [0.1, 1, 10, 50, 100, 1000]   (BTCUSDT)
+ * @example groupingOptions(3) → [0.01, 0.1, 1, 5, 10, 100]    (ETHUSDT)
+ * @example groupingOptions(0) → [10, 100, 1000, 5000, 10000, 100000]
  */
+const BASE_TICKS = [0.1, 1, 10, 50, 100, 1000];
+
 export function groupingOptions(pricePrecision: number): number[] {
-  return [1, 2, 3, 4].map((i) => parseFloat((10 ** (i - pricePrecision)).toPrecision(8)));
+  const scale = 10 ** (2 - pricePrecision);
+  return BASE_TICKS.map((t) => parseFloat((t * scale).toPrecision(6)));
 }

@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 import { groupingOptions } from "@/domain/market-data/book-grouping";
 import { usePricePrecision } from "@/stores/market-data";
 import { Panel } from "@/ui/panel";
-import { Select } from "@/ui/select";
 import { OrderBook } from "./order-book";
 import { useOrderBookViewState } from "./use-order-book-data";
 
@@ -53,7 +52,6 @@ export function OrderBookPanel({ levels = 20 }: OrderBookPanelProps) {
   const [viewMode, setViewMode] = useState<ViewMode>("both");
 
   // Reset grouping synchronously during render when pricePrecision changes (symbol switch).
-  // This avoids the extra useEffect render cycle and the Biome setState-in-effect warning.
   if (prevPrecision !== pricePrecision) {
     setPrevPrecision(pricePrecision);
     setTickSize(options[0] ?? 1);
@@ -63,44 +61,48 @@ export function OrderBookPanel({ levels = 20 }: OrderBookPanelProps) {
 
   return (
     <Panel title="Order Book">
-      <Panel.Header
-        extra={
-          <div className="flex items-center gap-2">
-            {/* View mode toggle */}
-            <div className="flex items-center gap-0.5">
-              {VIEW_MODES.map(({ mode, title, icon }) => (
-                <button
-                  key={mode}
-                  type="button"
-                  title={title}
-                  onClick={() => setViewMode(mode)}
-                  className={[
-                    "w-7 h-5 flex items-center justify-center gap-px rounded text-[9px]",
-                    "transition-colors cursor-pointer",
-                    viewMode === mode ? "bg-primary/15" : "text-muted-foreground hover:bg-muted",
-                  ].join(" ")}
-                >
-                  {icon}
-                </button>
-              ))}
-            </div>
-            {/* Price grouping selector */}
-            <Select
+      <Panel.Content noScroll>
+        {/* Controls row — intentionally below the drag handle (Panel title bar) */}
+        <div className="flex items-center justify-between px-2 py-1 border-b border-border shrink-0">
+          {/* View mode toggle */}
+          <div className="flex items-center gap-0.5">
+            {VIEW_MODES.map(({ mode, title, icon }) => (
+              <button
+                key={mode}
+                type="button"
+                title={title}
+                onClick={() => setViewMode(mode)}
+                className={[
+                  "w-7 h-6 flex items-center justify-center gap-px rounded text-[9px]",
+                  "transition-colors cursor-pointer",
+                  viewMode === mode
+                    ? "bg-primary/15 ring-1 ring-primary/30"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                ].join(" ")}
+              >
+                {icon}
+              </button>
+            ))}
+          </div>
+          {/* Price grouping selector */}
+          <div className="flex items-center gap-1">
+            <span className="text-[10px] text-muted-foreground font-mono select-none">Group</span>
+            <select
               value={tickSize}
               onChange={(e) => setTickSize(parseFloat(e.target.value))}
-              className="w-auto h-6 text-[11px] px-1 font-mono cursor-pointer"
+              className="h-6 text-[10px] font-mono bg-muted/60 text-foreground border border-border/60 rounded px-1 cursor-pointer outline-none focus:border-primary hover:border-border transition-colors"
             >
               {options.map((opt) => (
                 <option key={opt} value={opt}>
                   {opt}
                 </option>
               ))}
-            </Select>
+            </select>
           </div>
-        }
-      />
-      <Panel.Content noScroll>
-        <div className="flex flex-col h-full min-h-0">
+        </div>
+
+        {/* Book content */}
+        <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
           {raw ? (
             <OrderBook state={raw}>
               <OrderBook.ConnectionBanner />
