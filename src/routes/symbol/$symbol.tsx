@@ -74,7 +74,7 @@ export const Route = createFileRoute("/symbol/$symbol" as any)({
 
   notFoundComponent: () => (
     <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 p-8">
-      <p className="text-2xl font-cypher text-primary">Symbol Not Found</p>
+      <p className="text-2xl font-mono text-primary">Symbol Not Found</p>
       <p className="text-sm text-muted-foreground">
         The trading pair you requested is not supported.
       </p>

@@ -47,7 +47,7 @@ export default function LandingPage() {
           </div>
 
           <h1
-            className="font-cypher text-5xl font-bold leading-tight tracking-tight"
+            className="font-brand text-5xl font-bold leading-tight"
             style={{ color: "var(--primary)" }}
           >
             Flow
@@ -92,7 +92,7 @@ export default function LandingPage() {
         {/* Build status */}
         <section className="flex flex-col gap-6">
           <h2
-            className="font-cypher text-sm uppercase tracking-widest"
+            className="font-brand text-sm uppercase tracking-widest"
             style={{ color: "var(--color-muted-foreground)" }}
           >
             Build Status
@@ -131,7 +131,7 @@ export default function LandingPage() {
         {/* Stack */}
         <section className="flex flex-col gap-6">
           <h2
-            className="font-cypher text-sm uppercase tracking-widest"
+            className="font-brand text-sm uppercase tracking-widest"
             style={{ color: "var(--color-muted-foreground)" }}
           >
             Stack

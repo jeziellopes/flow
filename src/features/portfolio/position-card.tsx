@@ -22,7 +22,7 @@ export function PositionCard({ position }: PositionCardProps) {
     <Card className="hover:border-primary/30 transition-all duration-200">
       <CardHeader>
         <div>
-          <p className="text-sm font-medium font-cypher">{position.symbol}</p>
+          <p className="text-sm font-cypher font-medium">{position.symbol}</p>
         </div>
         <div className="text-xs text-muted-foreground tabular-nums font-mono">
           {position.quantity.toFixed(4)}

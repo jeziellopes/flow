@@ -38,7 +38,7 @@ describe("OrderBookRow", () => {
       "grid-cols-3",
       "tabular-nums",
       "font-mono",
-      "text-sm",
+      "text-xs",
     );
   });
 

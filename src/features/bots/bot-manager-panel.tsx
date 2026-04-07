@@ -105,7 +105,7 @@ export function BotManagerPanel({ bots, onStatusChange, onCreateBot }: BotManage
                 >
                   {/* Name */}
                   <td className="px-2 py-1.5">
-                    <span className="font-cypher font-semibold text-xs whitespace-nowrap">
+                    <span className="font-mono font-semibold text-xs whitespace-nowrap">
                       {bot.name}
                     </span>
                   </td>

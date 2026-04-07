@@ -30,7 +30,7 @@ export function TradeHistoryTable({ trades }: TradeHistoryTableProps) {
               <TableCell className="font-cypher font-semibold">{t.symbol}</TableCell>
               <TableCell
                 className={cn(
-                  "uppercase font-semibold",
+                  "uppercase font-cypher font-semibold",
                   t.side === "buy" ? "text-trading-bid" : "text-trading-ask",
                 )}
               >
