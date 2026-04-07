@@ -1,3 +1,10 @@
+# [1.1.0-next.16](https://github.com/jeziellopes/flow/compare/v1.1.0-next.15...v1.1.0-next.16) (2026-04-07)
+
+
+### Bug Fixes
+
+* **market-data:** align stream subscriptions with Binance spot reference ([7a9d848](https://github.com/jeziellopes/flow/commit/7a9d848e2cfafb1985ffad27809105e8075aa034)), closes [#129](https://github.com/jeziellopes/flow/issues/129)
+
 # [1.1.0-next.15](https://github.com/jeziellopes/flow/compare/v1.1.0-next.14...v1.1.0-next.15) (2026-04-07)
 
 
