@@ -47,7 +47,7 @@ export default function LandingPage() {
           </div>
 
           <h1
-            className="font-cypher text-5xl font-bold leading-tight tracking-tight"
+            className="font-cypher text-5xl font-bold leading-tight"
             style={{ color: "var(--primary)" }}
           >
             Flow
