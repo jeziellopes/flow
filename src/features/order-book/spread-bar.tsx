@@ -19,7 +19,10 @@ export function SpreadBar({ spread, lastPrice, tickDirection = "neutral" }: Spre
   return (
     <div
       className={cn(
-        "flex items-center justify-between px-2 py-1 text-xs font-mono text-muted-foreground bg-muted/40 border-y border-border",
+        `
+          flex items-center justify-between px-2 py-1 text-xs font-mono text-muted-foreground
+          bg-muted/40 border-y border-border
+        `,
       )}
     >
       <span>

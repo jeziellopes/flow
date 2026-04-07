@@ -30,7 +30,8 @@
       },
       "style": {
         "noNonNullAssertion": "warn",
-        "useImportType": "error"
+        "useImportType": "error",
+        "noUnusedTemplateLiteral": "off"
       },
       "nursery": {
         "useImportsFirst": "error"

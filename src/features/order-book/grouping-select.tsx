@@ -16,8 +16,14 @@ export function GroupingSelect({ value, options, onChange }: GroupingSelectProps
     <Dropdown.Root className="flex items-center gap-1.5">
       <Dropdown.Trigger
         className={cn(
-          "h-6 px-1.5 flex items-center gap-1 font-mono text-[12px] text-muted-foreground tabular-nums",
-          "rounded hover:bg-input",
+          `
+            h-6 px-1.5 flex items-center gap-1 font-mono text-[12px] text-muted-foreground
+            tabular-nums
+          `,
+          `
+            rounded
+            hover:bg-input
+          `,
           "cursor-pointer transition-colors select-none",
           "hover:border-ring/60",
           "focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary]",

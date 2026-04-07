@@ -99,7 +99,10 @@ function DropdownMenu({ children, align = "left", className }: DropdownMenuProps
     <div
       role="listbox"
       className={cn(
-        "absolute top-full mt-1 z-50 min-w-full rounded border border-border bg-card shadow-lg py-0.5",
+        `
+          absolute top-full mt-1 z-50 min-w-full rounded border border-border bg-card shadow-lg
+          py-0.5
+        `,
         align === "right" ? "right-0" : "left-0",
         className,
       )}
@@ -131,7 +134,10 @@ function DropdownItem({ children, onSelect, active, className }: DropdownItemPro
         "w-full text-left px-2.5 py-1 cursor-pointer transition-colors",
         active
           ? "text-foreground bg-primary/10"
-          : "text-muted-foreground hover:bg-muted hover:text-foreground",
+          : `
+            text-muted-foreground
+            hover:bg-muted hover:text-foreground
+          `,
         className,
       )}
     >

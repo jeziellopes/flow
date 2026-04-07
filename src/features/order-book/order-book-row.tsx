@@ -23,7 +23,10 @@ export function OrderBookRow({ level, side }: OrderBookRowProps) {
       type="button"
       aria-label={`Select price ${level.price.toFixed(pricePrecision)}`}
       className={cn(
-        "w-full relative grid grid-cols-3 gap-2 tabular-nums font-mono text-xs px-2 py-0.5 overflow-x-hidden",
+        `
+          w-full relative grid grid-cols-3 gap-2 tabular-nums font-mono text-xs px-2 py-0.5
+          overflow-x-hidden
+        `,
         "cursor-pointer select-none text-left",
         hoverBg,
       )}

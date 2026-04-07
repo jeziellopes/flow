@@ -126,7 +126,10 @@ export function BotManagerPanel({ bots, onStatusChange, onCreateBot }: BotManage
                   <td className="px-2 py-1.5">
                     <span
                       className={cn(
-                        "rounded-full px-1.5 py-0.5 text-[9px] font-mono uppercase tracking-wide font-semibold",
+                        `
+                          rounded-full px-1.5 py-0.5 text-[9px] font-mono uppercase tracking-wide
+                          font-semibold
+                        `,
                         statusClasses(bot.status),
                       )}
                     >

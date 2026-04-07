@@ -119,7 +119,11 @@ export function ThemeDropdown() {
                 type="button"
                 onClick={() => selectTheme(t.id)}
                 className={cn(
-                  "w-full flex items-center gap-2 px-3 py-1.5 text-xs hover:bg-muted transition-colors cursor-pointer text-left",
+                  `
+                    w-full flex items-center gap-2 px-3 py-1.5 text-xs
+                    hover:bg-muted
+                    transition-colors cursor-pointer text-left
+                  `,
                   t.id === theme ? "text-primary" : "text-foreground",
                 )}
               >
@@ -142,7 +146,10 @@ export function ThemeDropdown() {
                 title={m.label}
                 aria-label={m.label}
                 className={cn(
-                  "flex items-center justify-center flex-1 h-6 rounded cursor-pointer transition-colors",
+                  `
+                    flex items-center justify-center flex-1 h-6 rounded cursor-pointer
+                    transition-colors
+                  `,
                   m.id === mode
                     ? "bg-primary text-on-primary"
                     : "bg-transparent text-muted-foreground",
