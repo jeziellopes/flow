@@ -13,11 +13,11 @@ function RouteComponent() {
       <div className="w-full max-w-5xl mx-auto px-6 py-8 space-y-8">
         <title>Portfolio | Flow</title>
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-mono font-bold tracking-wide text-primary">Portfolio</h1>
+          <h1 className="text-2xl font-cypher font-semibold tracking-wide text-primary">Portfolio</h1>
           <Link
             to={"/symbol/$symbol" as never}
             params={{ symbol: "BTCUSDT" } as never}
-            className="text-xs font-mono px-3 py-1.5 rounded border border-border hover:border-border/80 text-muted-foreground transition-colors"
+            className="text-xs font-cypher px-3 py-1.5 rounded border border-border hover:border-border/80 text-muted-foreground transition-colors"
           >
             ← Back to terminal
           </Link>
@@ -33,7 +33,7 @@ function RouteComponent() {
             />
           </div>
           <div className="space-y-3">
-            <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+            <h2 className="text-sm font-cypher font-medium text-muted-foreground uppercase tracking-wider">
               Open Positions
             </h2>
             <div className="grid grid-cols-2 gap-3">
@@ -44,7 +44,7 @@ function RouteComponent() {
           </div>
         </div>
         <div className="space-y-3">
-          <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+          <h2 className="text-sm font-cypher font-medium text-muted-foreground uppercase tracking-wider">
             Trade History
           </h2>
           <TradeHistoryTable trades={MOCK_PORTFOLIO_TRADES} />

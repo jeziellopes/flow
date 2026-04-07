@@ -27,10 +27,10 @@ export function TradeHistoryTable({ trades }: TradeHistoryTableProps) {
         <TableBody>
           {trades.map((t) => (
             <TableRow key={t.id}>
-              <TableCell className="font-mono font-semibold">{t.symbol}</TableCell>
+              <TableCell className="font-cypher font-semibold">{t.symbol}</TableCell>
               <TableCell
                 className={cn(
-                  "uppercase font-semibold",
+                  "uppercase font-cypher font-semibold",
                   t.side === "buy" ? "text-trading-bid" : "text-trading-ask",
                 )}
               >

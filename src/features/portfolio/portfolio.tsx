@@ -16,7 +16,7 @@ interface PortfolioProps {
 export function Portfolio({ state }: PortfolioProps) {
   return (
     <div className="p-3 space-y-4">
-      <h3 className="text-xs font-mono font-semibold tracking-wide uppercase text-muted-foreground select-none">
+      <h3 className="text-xs font-cypher font-semibold tracking-wide uppercase text-muted-foreground select-none">
         Portfolio
       </h3>
       <BalanceDisplay
