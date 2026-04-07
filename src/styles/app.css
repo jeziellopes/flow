@@ -105,4 +105,17 @@
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: oklch(0.1 0 0); }
   ::-webkit-scrollbar-thumb { background: oklch(0.25 0 0); border-radius: 20px; }
+
+
+  /* Chrome, Safari, Edge, Opera */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
 }
