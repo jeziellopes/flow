@@ -1,7 +1,7 @@
 {
   "name": "trading-engine",
   "private": true,
-  "version": "1.1.0-next.12",
+  "version": "1.1.0-next.13",
   "type": "module",
   "description": "Real-time trading engine simulator with live Binance market data",
   "packageManager": "pnpm@10.24.0",

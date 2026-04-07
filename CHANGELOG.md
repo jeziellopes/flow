@@ -1,3 +1,12 @@
+# [1.1.0-next.13](https://github.com/jeziellopes/flow/compare/v1.1.0-next.12...v1.1.0-next.13) (2026-04-07)
+
+
+### Bug Fixes
+
+* **order-book:** align row font size with market trades (text-sm → text-xs, py-px → py-0.5) ([408d228](https://github.com/jeziellopes/flow/commit/408d2281925ef9903ad7b46b054c74ed7e50e451))
+* **styles:** update body font-family to Noto Sans Mono (stale Geist Mono ref) ([2eccda9](https://github.com/jeziellopes/flow/commit/2eccda90f9899d088916f47c0b91420914f56522))
+* **ui:** add font-mono tabular-nums to Input primitive for consistent number rendering ([17683dc](https://github.com/jeziellopes/flow/commit/17683dc305be1a6fe967e27a1726d4395a3d9275))
+
 # [1.1.0-next.12](https://github.com/jeziellopes/flow/compare/v1.1.0-next.11...v1.1.0-next.12) (2026-04-06)
 
 
