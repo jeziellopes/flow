@@ -1,3 +1,10 @@
+# [1.1.0-next.14](https://github.com/jeziellopes/flow/compare/v1.1.0-next.13...v1.1.0-next.14) (2026-04-07)
+
+
+### Performance Improvements
+
+* **order-book:** prevent CLS micro-stutters on live data updates ([475e041](https://github.com/jeziellopes/flow/commit/475e041640950da1a99562a85659ee78f576fe29)), closes [#118](https://github.com/jeziellopes/flow/issues/118)
+
 # [1.1.0-next.13](https://github.com/jeziellopes/flow/compare/v1.1.0-next.12...v1.1.0-next.13) (2026-04-07)
 
 
