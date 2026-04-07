@@ -1,3 +1,10 @@
+# [1.1.0-next.15](https://github.com/jeziellopes/flow/compare/v1.1.0-next.14...v1.1.0-next.15) (2026-04-07)
+
+
+### Features
+
+* **order-book:** hover highlight + click to set limit price ([65a102b](https://github.com/jeziellopes/flow/commit/65a102b9cac650f74d3771944526e3772b82c1fb)), closes [#126](https://github.com/jeziellopes/flow/issues/126)
+
 # [1.1.0-next.14](https://github.com/jeziellopes/flow/compare/v1.1.0-next.13...v1.1.0-next.14) (2026-04-07)
 
 
