@@ -58,7 +58,7 @@ function RootComponent() {
             <Link
               // biome-ignore lint/suspicious/noExplicitAny: codegen pending
               to={"/" as any}
-              className="font-cypher text-sm font-bold tracking-widest select-none text-primary"
+              className="font-brand text-sm font-bold tracking-widest select-none text-primary"
             >
               <Logo className="w-6 h-6" />
               {!isSymbolRoute && <span className="ml-2">Flow</span>}

@@ -56,7 +56,7 @@ export function Panel({ title, children, className }: PanelProps) {
       )}
     >
       <div className="px-3 py-2 border-b border-border shrink-0 cursor-move flex items-center justify-between gap-2">
-        <h2 className="text-xs font-mono font-semibold tracking-wide uppercase text-muted-foreground select-none">
+        <h2 className="text-xs font-cypher font-semibold tracking-widest uppercase text-muted-foreground select-none">
           {title}
         </h2>
         {extra}

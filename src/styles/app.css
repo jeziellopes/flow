@@ -5,9 +5,10 @@
 
 @theme inline {
   /* ── Fonts ───────────────────────────────────────────── */
-  --font-mono:   var(--font-geist-mono), 'Geist Mono', monospace;
-  --font-sans:   var(--font-geist-mono), 'Geist Mono', monospace;
-  --font-cypher: var(--font-orbitron), 'Orbitron', sans-serif;
+  --font-mono:   var(--font-noto-sans-mono), 'Noto Sans Mono', monospace;
+  --font-sans:   var(--font-noto-sans-mono), 'Noto Sans Mono', monospace;
+  --font-cypher: var(--font-rajdhani), 'Rajdhani', sans-serif;
+  --font-brand:  var(--font-orbitron), 'Orbitron', sans-serif;
 
   /* ── Semantic colors (maps tokens.css bare vars → Tailwind classes) ── */
   --color-background:         var(--background);

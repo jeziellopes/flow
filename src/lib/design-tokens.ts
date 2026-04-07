@@ -3,7 +3,8 @@
 
 export const designTokens = {
   fonts: {
-    "geist-mono": '"Geist Mono"',
+    "noto-sans-mono": '"Noto Sans Mono"',
+    rajdhani: '"Rajdhani"',
     orbitron: '"Orbitron"',
   },
   semantic: {
