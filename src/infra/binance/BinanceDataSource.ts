@@ -117,7 +117,7 @@ export class BinanceDataSource implements MarketDataSource {
 
   private connectStreams(symbol: string): void {
     const s = symbol.toLowerCase();
-    this.wsClient.connect([`${s}@depth`, `${s}@trade`]);
+    this.wsClient.connect([`${s}@depth`, `${s}@aggTrade`]);
     this.emitStatus("reconnecting");
   }
 
@@ -135,15 +135,15 @@ export class BinanceDataSource implements MarketDataSource {
       } else if (update.lastSequenceId <= this.snapshotSeqId) {
         // Stale event — discard (AC-3)
       } else if (update.firstSequenceId > this.snapshotSeqId + 1) {
-        // Binance update rule 2: gap detected — missed events, must restart
+        // Binance spot rule 6: U_new must equal u_prev + 1 — gap detected, restart
         this.handleDisconnect();
       } else {
         this.emitDepthUpdate(update);
         this.snapshotSeqId = update.lastSequenceId;
       }
-    } else if (msg.e === "trade") {
+    } else if (msg.e === "aggTrade") {
       const trade: NormalizedTrade = {
-        id: String(msg.t),
+        id: String(msg.a),
         price: msg.p,
         quantity: msg.q,
         time: msg.T,
