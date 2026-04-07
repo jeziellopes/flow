@@ -1,6 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useUIStore } from "@/stores/ui";
 import { Button } from "@/ui/button";
 import { Input } from "@/ui/input";
 import { Tab, TabList } from "@/ui/tabs";
@@ -53,6 +55,17 @@ export function OrderForm({ symbol, onSubmit, isLoading = false }: OrderFormProp
   const side = watch("side");
   const type = watch("type");
   const busy = isLoading || isSubmitting;
+
+  const selectedPrice = useUIStore((s) => s.selectedPrice);
+  const setSelectedPrice = useUIStore((s) => s.setSelectedPrice);
+
+  // When an order book row is clicked, pre-fill the price and switch to limit.
+  useEffect(() => {
+    if (selectedPrice === null) return;
+    setValue("price", selectedPrice.toString());
+    setValue("type", "limit");
+    setSelectedPrice(null);
+  }, [selectedPrice, setValue, setSelectedPrice]);
 
   const internalSubmit = async (data: OrderFormData) => {
     await onSubmit(data);
