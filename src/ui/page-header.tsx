@@ -22,7 +22,7 @@ export type PageHeaderProps = VariantProps<typeof pageHeaderVariants> & {
 export function PageHeader({ title, action, size, className }: PageHeaderProps) {
   return (
     <div className={cn(pageHeaderVariants({ size }), className)}>
-      <h1 className="text-2xl font-cypher font-semibold tracking-wide text-primary">{title}</h1>
+      <h1 className="text-2xl font-brand font-semibold tracking-wide text-primary">{title}</h1>
       {action}
     </div>
   );

@@ -59,7 +59,7 @@ function BotDetailPage() {
               <ArrowLeft size={12} /> {bot.symbol}
             </Link>
             <span className="text-muted-foreground text-xs">/</span>
-            <h1 className="font-cypher font-semibold text-lg">{bot.name}</h1>
+            <h1 className="font-brand font-semibold text-lg">{bot.name}</h1>
             <StatusBadge status={bot.status} />
             <div className="flex-1" />
             <BotStatusControls
