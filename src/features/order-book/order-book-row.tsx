@@ -15,14 +15,18 @@ export function OrderBookRow({ level, side }: OrderBookRowProps) {
 
   return (
     <div
-      className={cn("relative grid grid-cols-3 gap-2 tabular-nums font-mono text-xs px-2 py-0.5")}
+      className={cn(
+        "relative grid grid-cols-3 gap-2 tabular-nums font-mono text-xs px-2 py-0.5 overflow-x-hidden",
+      )}
     >
       <DepthBar percent={level.percent} side={side} />
-      <div className={cn("relative z-10", textColor)}>{level.price.toFixed(pricePrecision)}</div>
-      <div className="relative z-10 text-right text-muted-foreground">
+      <div className={cn("relative z-10 min-w-0 overflow-hidden", textColor)}>
+        {level.price.toFixed(pricePrecision)}
+      </div>
+      <div className="relative z-10 min-w-0 overflow-hidden text-right text-muted-foreground">
         {level.quantity.toFixed(qtyPrecision)}
       </div>
-      <div className="relative z-10 text-right text-muted-foreground">
+      <div className="relative z-10 min-w-0 overflow-hidden text-right text-muted-foreground">
         {level.total.toFixed(qtyPrecision)}
       </div>
     </div>
