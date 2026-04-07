@@ -1,5 +1,5 @@
-import { lazy, Suspense, useState } from "react";
-import { toast } from "sonner";
+import { lazy, Suspense, useOptimistic, useState } from "react";
+import type { Order } from "@/domain/trading/types";
 import { CandleChart } from "@/features/chart/candle-chart";
 import { OrderBookPanel } from "@/features/order-book";
 import type { OrderFormData } from "@/features/order-entry/order-form";
@@ -9,7 +9,8 @@ import { MyTradesFeed } from "@/features/trades/my-trades-feed";
 import { DataPanel } from "@/features/trading/data-panel";
 import { PortfolioSummaryWidget } from "@/features/trading/portfolio-summary-widget";
 import { MOCK_PORTFOLIO_SUMMARY } from "@/lib/mock-data";
-import { useBaseAsset, useTrades } from "@/stores/market-data";
+import { useBaseAsset, useConnectionStatus, useTrades } from "@/stores/market-data";
+import { useFilledOrders, usePortfolioStore } from "@/stores/portfolio";
 import { useTerminalStore } from "@/stores/terminal-store";
 import { Button } from "@/ui/button";
 import { ErrorBoundary } from "@/ui/error-boundary";
@@ -38,12 +39,71 @@ function MarketTradesPanel() {
 
 /** Leaf — owns fills subscription; never causes TerminalLayout to re-render. */
 function MyTradesPanel() {
-  const fills = useTerminalStore((s) => s.fills);
-  return <MyTradesFeed fills={fills} />;
+  const orders = useFilledOrders();
+  return <MyTradesFeed orders={orders} />;
+}
+
+/**
+ * OrderPanel — owns form submission and useOptimistic for market orders.
+ * Isolated leaf: never re-renders from order book ticks.
+ */
+function OrderPanel({ symbol }: { symbol: string }) {
+  const [submitting, setSubmitting] = useState(false);
+  const connectionStatus = useConnectionStatus();
+  const submitOrder = usePortfolioStore((s) => s.submitOrder);
+  const filledOrders = useFilledOrders();
+
+  // AC-4: useOptimistic — market order appears in history before store settles.
+  const [, addOptimisticFill] = useOptimistic(filledOrders, (current: Order[], incoming: Order) => [
+    incoming,
+    ...current,
+  ]);
+
+  const handleSubmit = async (data: OrderFormData): Promise<{ error?: string } | undefined> => {
+    setSubmitting(true);
+    const { price, ...rest } = data;
+    const orderInput = price ? { ...rest, price } : rest;
+
+    // Show a pending entry in history immediately (before Zustand updates).
+    addOptimisticFill({
+      id: crypto.randomUUID(),
+      clientOrderId: crypto.randomUUID(),
+      symbol: orderInput.symbol,
+      side: orderInput.side,
+      type: orderInput.type,
+      quantity: orderInput.quantity,
+      filledQuantity: "0",
+      price: ("price" in orderInput ? orderInput.price : undefined) ?? "0",
+      status: "submitted",
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    });
+
+    try {
+      const result = await submitOrder(orderInput);
+      if (!result.ok) return result.error ? { error: result.error } : {};
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <Panel title="Place Order">
+      <Panel.Content>
+        <div className="p-3">
+          <OrderForm
+            symbol={symbol}
+            onSubmit={handleSubmit}
+            isLoading={submitting}
+            isConnected={connectionStatus === "connected"}
+          />
+        </div>
+      </Panel.Content>
+    </Panel>
+  );
 }
 
 export function TerminalLayout({ symbol, tab = "book" }: TerminalLayoutProps) {
-  const [orderSubmitting, setOrderSubmitting] = useState(false);
   const {
     layouts,
     rowHeight,
@@ -57,30 +117,8 @@ export function TerminalLayout({ symbol, tab = "book" }: TerminalLayoutProps) {
   const setBotStatus = useTerminalStore((s) => s.setBotStatus);
   const [activeTimeframe, setActiveTimeframe] = useState("15m");
 
-  const handleOrderSubmit = async (data: OrderFormData) => {
-    setOrderSubmitting(true);
-    try {
-      await new Promise<void>((resolve, reject) => {
-        setTimeout(() => {
-          void reject;
-          resolve();
-        }, 600);
-      });
-      const side = data.side === "buy" ? "Buy" : "Sell";
-      const orderType = data.type === "limit" ? "Limit" : "Market";
-      toast.success(`${side} ${orderType} order placed`, {
-        description: `${data.quantity} @ ${data.type === "market" ? "market price" : data.price}`,
-      });
-    } catch (err) {
-      toast.error("Order failed", {
-        description: err instanceof Error ? err.message : "Please try again.",
-      });
-    } finally {
-      setOrderSubmitting(false);
-    }
-  };
-
   const botPnl = bots.reduce((sum, b) => sum + b.realizedPnl + b.unrealizedPnl, 0);
+  void botPnl; // TODO: wire to DataPanel bot summary
   const timeframeTabs = (
     <div className="flex items-center gap-1">
       {["1m", "5m", "15m", "1h", "4h", "1d"].map((tf) => (
@@ -141,23 +179,13 @@ export function TerminalLayout({ symbol, tab = "book" }: TerminalLayoutProps) {
             </div>
             <div key="order">
               <ErrorBoundary>
-                <Panel title="Place Order">
-                  <Panel.Content>
-                    <div className="p-3">
-                      <OrderForm
-                        symbol={symbol}
-                        onSubmit={handleOrderSubmit}
-                        isLoading={orderSubmitting}
-                      />
-                    </div>
-                  </Panel.Content>
-                </Panel>
+                <OrderPanel symbol={symbol} />
               </ErrorBoundary>
             </div>
             <div key="portfolio">
               <ErrorBoundary>
                 <Panel title="Portfolio">
-                  <Panel.Content>
+                  <Panel.Content noScroll>
                     <PortfolioSummaryWidget {...MOCK_PORTFOLIO_SUMMARY} botPnl={botPnl} />
                   </Panel.Content>
                 </Panel>

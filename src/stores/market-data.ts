@@ -185,3 +185,21 @@ export function usePricePrecision(): number {
 export function useQtyPrecision(): number {
   return useMarketDataStore((s) => s.symbolInfo?.qtyPrecision ?? 4);
 }
+
+/** Best ask price (minimum ask level) as a string, or null if order book is empty. */
+export function useBestAsk(): string | null {
+  return useMarketDataStore((s) => {
+    const book = s.orderBook;
+    if (!book || book.asks.size === 0) return null;
+    return String(Math.min(...[...book.asks.keys()].map(Number)));
+  });
+}
+
+/** Best bid price (maximum bid level) as a string, or null if order book is empty. */
+export function useBestBid(): string | null {
+  return useMarketDataStore((s) => {
+    const book = s.orderBook;
+    if (!book || book.bids.size === 0) return null;
+    return String(Math.max(...[...book.bids.keys()].map(Number)));
+  });
+}

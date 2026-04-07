@@ -1,6 +1,7 @@
 import { Activity, type ReactNode, useState } from "react";
 import { BotManagerPanel } from "@/features/bots/bot-manager-panel";
 import type { BotInstance, BotStatus } from "@/features/bots/types";
+import { OpenOrders } from "@/features/order-entry/open-orders";
 import { cn } from "@/lib/utils";
 import { Tab, TabList } from "@/ui/tabs";
 
@@ -14,6 +15,7 @@ interface DataPanelProps {
 
 const TABS = [
   { value: "trades", label: "My Trades" },
+  { value: "orders", label: "Open Orders" },
   { value: "bots", label: "Bots" },
 ] as const;
 
@@ -47,6 +49,11 @@ export function DataPanel({ bots, TradesFeedSlot, onBotStatusChange, className }
 
       <div className="flex-1 min-h-0 overflow-y-auto">
         <Activity mode={activeTab === "trades" ? "visible" : "hidden"}>{TradesFeedSlot}</Activity>
+        <Activity mode={activeTab === "orders" ? "visible" : "hidden"}>
+          <div className="p-3">
+            <OpenOrders />
+          </div>
+        </Activity>
         <Activity mode={activeTab === "bots" ? "visible" : "hidden"}>
           <BotManagerPanel bots={bots} onStatusChange={onBotStatusChange} />
         </Activity>
