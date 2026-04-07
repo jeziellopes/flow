@@ -10,7 +10,7 @@ export function Input({ className, size = "md", ref, ...props }: InputProps) {
     <input
       ref={ref}
       className={cn(
-        "flex w-full rounded-md border border-input bg-input px-3 text-foreground placeholder:text-muted-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--primary)] disabled:opacity-50 disabled:cursor-not-allowed",
+        "flex w-full rounded-md border border-input bg-input px-3 font-mono tabular-nums text-foreground placeholder:text-muted-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--primary)] disabled:opacity-50 disabled:cursor-not-allowed",
         size === "sm" ? "h-8 py-1 text-sm" : "h-10 py-2 text-base",
         className,
       )}
