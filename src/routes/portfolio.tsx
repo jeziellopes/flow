@@ -13,7 +13,9 @@ function RouteComponent() {
       <div className="w-full max-w-5xl mx-auto px-6 py-8 space-y-8">
         <title>Portfolio | Flow</title>
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-brand font-semibold tracking-wide text-primary">Portfolio</h1>
+          <h1 className="text-2xl font-brand font-semibold tracking-wide text-primary">
+            Portfolio
+          </h1>
           <Link
             to={"/symbol/$symbol" as never}
             params={{ symbol: "BTCUSDT" } as never}
