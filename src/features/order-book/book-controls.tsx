@@ -34,7 +34,14 @@ function ViewModeToggle({ value, onChange }: ViewModeToggleProps) {
           size="icon"
           title={title}
           onClick={() => onChange(mode)}
-          className={cn(value === mode ? "opacity-100" : "opacity-40 hover:opacity-70")}
+          className={cn(
+            value === mode
+              ? "opacity-100"
+              : `
+                opacity-40
+                hover:opacity-70
+              `,
+          )}
         >
           <ViewModeIcon mode={mode} />
         </Button>

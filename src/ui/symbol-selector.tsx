@@ -64,10 +64,21 @@ export function SymbolSelector({ triggerClassName }: SymbolSelectorProps = {}) {
           triggerClassName
             ? cn(
                 triggerClassName,
-                "flex items-center gap-1 cursor-pointer transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-ring",
+                `
+                  flex items-center gap-1 cursor-pointer transition-colors
+                  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1
+                  focus-visible:outline-ring
+                `,
               )
             : cn(
-                "flex items-center gap-1.5 cursor-pointer text-xs font-mono px-2.5 py-1 rounded border border-border/60 hover:border-border transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-ring",
+                `
+                  flex items-center gap-1.5 cursor-pointer text-xs font-mono px-2.5 py-1 rounded
+                  border border-border/60
+                  hover:border-border
+                  transition-colors
+                  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1
+                  focus-visible:outline-ring
+                `,
                 currentSymbol ? "text-primary" : "text-muted-foreground",
               ),
         )}

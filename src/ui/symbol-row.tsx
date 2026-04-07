@@ -13,7 +13,11 @@ export function SymbolRow({ info, active, onSelect }: SymbolRowProps) {
       type="button"
       onClick={() => onSelect(info.symbol)}
       className={cn(
-        "w-full cursor-pointer text-left px-3 py-1.5 flex items-center gap-1 hover:bg-muted/60 transition-colors",
+        `
+          w-full cursor-pointer text-left px-3 py-1.5 flex items-center gap-1
+          hover:bg-muted/60
+          transition-colors
+        `,
         active && "text-primary bg-trading-bid-muted",
       )}
     >
