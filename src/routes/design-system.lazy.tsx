@@ -111,7 +111,7 @@ function useTheme() {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="space-y-4">
-      <h2 className="text-xs font-cypher font-semibold tracking-widest text-foreground uppercase">
+      <h2 className="text-xs font-mono font-semibold tracking-widest text-foreground uppercase">
         {title}
       </h2>
       {children}
@@ -217,7 +217,7 @@ function DesignSystemShowcase() {
         {/* Header */}
         <div className="space-y-4">
           <div>
-            <h1 className="text-2xl font-cypher font-bold tracking-tight">CypherUI — Trading</h1>
+            <h1 className="text-2xl font-mono font-bold tracking-tight">CypherUI — Trading</h1>
             <p className="text-sm text-muted-foreground mt-1">
               Component gallery · All tokens sourced from{" "}
               <code className="font-mono text-xs">tokens.css</code>
@@ -416,7 +416,7 @@ function DesignSystemShowcase() {
             </div>
             <div className="p-4 rounded-md border border-border bg-card space-y-1">
               <p className="text-[10px] font-mono text-muted-foreground">
-                Share Tech Mono — font-mono — body / prices
+                Geist Mono — font-mono — body / prices
               </p>
               <p className="text-base font-mono tabular-nums">67843.50 · 1.24500 · +2.34%</p>
             </div>
@@ -534,7 +534,7 @@ function DesignSystemShowcase() {
             <Card>
               <CardHeader>
                 <div>
-                  <p className="text-sm font-medium font-cypher">BTCUSDT</p>
+                  <p className="text-sm font-medium font-mono">BTCUSDT</p>
                 </div>
                 <Badge variant="buy">Long</Badge>
               </CardHeader>
@@ -567,7 +567,7 @@ function DesignSystemShowcase() {
             <Card>
               <CardHeader>
                 <div>
-                  <p className="text-sm font-medium font-cypher">ETHUSDT</p>
+                  <p className="text-sm font-medium font-mono">ETHUSDT</p>
                 </div>
                 <Badge variant="sell">Short</Badge>
               </CardHeader>
