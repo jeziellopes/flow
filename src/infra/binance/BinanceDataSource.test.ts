@@ -124,6 +124,70 @@ describe("BinanceDataSource — gap detection", () => {
   });
 });
 
+describe("BinanceDataSource — aggTrade normalisation", () => {
+  let source: BinanceDataSource;
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    capturedCallbacks = null;
+    source = new BinanceDataSource();
+    source.connect("BTCUSDT");
+  });
+
+  afterEach(() => {
+    source.disconnect();
+  });
+
+  it("maps aggTrade event to NormalizedTrade using aggregate ID", () => {
+    const tradeCb = vi.fn();
+    source.onTrade(tradeCb);
+
+    capturedCallbacks?.onMessage({
+      e: "aggTrade",
+      E: 1_700_000_000_000,
+      s: "BTCUSDT",
+      a: 9_999_001,
+      p: "68722.30",
+      q: "0.573",
+      f: 7_534_530_079,
+      l: 7_534_530_080,
+      T: 1_700_000_000_000,
+      m: false,
+    });
+
+    expect(tradeCb).toHaveBeenCalledTimes(1);
+    expect(tradeCb).toHaveBeenCalledWith({
+      id: "9999001",
+      price: "68722.30",
+      quantity: "0.573",
+      time: 1_700_000_000_000,
+      isBuyerMaker: false,
+    });
+  });
+
+  it("emits aggTrade as buyer-maker correctly", () => {
+    const tradeCb = vi.fn();
+    source.onTrade(tradeCb);
+
+    capturedCallbacks?.onMessage({
+      e: "aggTrade",
+      E: 1_700_000_000_001,
+      s: "BTCUSDT",
+      a: 9_999_002,
+      p: "68700.00",
+      q: "1.000",
+      f: 7_534_530_081,
+      l: 7_534_530_081,
+      T: 1_700_000_000_001,
+      m: true,
+    });
+
+    expect(tradeCb).toHaveBeenCalledWith(
+      expect.objectContaining({ isBuyerMaker: true, id: "9999002" }),
+    );
+  });
+});
+
 describe("BinanceDataSource — snapshot staleness check", () => {
   let source: BinanceDataSource;
 

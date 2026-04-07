@@ -22,19 +22,24 @@ export const DepthUpdateSchema = z.object({
 });
 export type DepthUpdateMsg = z.infer<typeof DepthUpdateSchema>;
 
-/** Binance WebSocket trade event. */
-export const TradeEventSchema = z.object({
-  e: z.literal("trade"),
+/** Binance WebSocket aggregated trade event (@aggTrade). */
+export const AggTradeEventSchema = z.object({
+  e: z.literal("aggTrade"),
   E: z.number(), // event time
   s: z.string(), // symbol
-  t: z.number(), // trade ID
+  a: z.number(), // aggregate trade ID
   p: z.string(), // price
   q: z.string(), // quantity
+  f: z.number(), // first trade ID in aggregate
+  l: z.number(), // last trade ID in aggregate
   T: z.number(), // trade time
   m: z.boolean(), // is buyer maker
 });
-export type TradeEventMsg = z.infer<typeof TradeEventSchema>;
+export type AggTradeEventMsg = z.infer<typeof AggTradeEventSchema>;
 
 /** Discriminated union for all stream messages this app consumes. */
-export const StreamMessageSchema = z.discriminatedUnion("e", [DepthUpdateSchema, TradeEventSchema]);
+export const StreamMessageSchema = z.discriminatedUnion("e", [
+  DepthUpdateSchema,
+  AggTradeEventSchema,
+]);
 export type StreamMessage = z.infer<typeof StreamMessageSchema>;
