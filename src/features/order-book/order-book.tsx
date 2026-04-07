@@ -24,7 +24,7 @@ function OrderBookAsks() {
   return (
     <div
       data-testid="asks-container"
-      className="flex-1 min-h-0 overflow-y-auto flex flex-col justify-end"
+      className="flex-1 min-h-0 overflow-y-scroll flex flex-col justify-end"
     >
       <AskTable levels={state.asks} />
     </div>
@@ -34,7 +34,7 @@ function OrderBookAsks() {
 function OrderBookBids() {
   const state = useOrderBookContext();
   return (
-    <div data-testid="bids-container" className="flex-1 min-h-0 overflow-y-auto">
+    <div data-testid="bids-container" className="flex-1 min-h-0 overflow-y-scroll">
       <BidTable levels={state.bids} />
     </div>
   );

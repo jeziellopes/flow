@@ -39,6 +39,7 @@ describe("OrderBookRow", () => {
       "tabular-nums",
       "font-mono",
       "text-xs",
+      "overflow-x-hidden",
     );
   });
 
