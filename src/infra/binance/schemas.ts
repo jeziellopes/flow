@@ -51,10 +51,35 @@ export const MiniTickerEventSchema = z.object({
 });
 export type MiniTickerEventMsg = z.infer<typeof MiniTickerEventSchema>;
 
+/** Inner kline object from the @kline_* stream. */
+export const KlineDataSchema = z.object({
+  t: z.number(), // kline open time (ms)
+  T: z.number(), // kline close time (ms)
+  s: z.string(), // symbol
+  i: z.string(), // interval
+  o: z.string(), // open price
+  c: z.string(), // close price
+  h: z.string(), // high price
+  l: z.string(), // low price
+  v: z.string(), // base asset volume
+  n: z.number(), // number of trades
+  x: z.boolean(), // is kline closed
+});
+
+/** Binance WebSocket kline event (@kline_* stream). */
+export const KlineEventSchema = z.object({
+  e: z.literal("kline"),
+  E: z.number(), // event time
+  s: z.string(), // symbol
+  k: KlineDataSchema,
+});
+export type KlineEventMsg = z.infer<typeof KlineEventSchema>;
+
 /** Discriminated union for all stream messages this app consumes. */
 export const StreamMessageSchema = z.discriminatedUnion("e", [
   DepthUpdateSchema,
   AggTradeEventSchema,
   MiniTickerEventSchema,
+  KlineEventSchema,
 ]);
 export type StreamMessage = z.infer<typeof StreamMessageSchema>;

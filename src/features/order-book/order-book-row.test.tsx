@@ -40,7 +40,6 @@ describe("OrderBookRow", () => {
     const row = container.firstChild as HTMLElement;
     expect(row.tagName).toBe("TR");
     expect(row).toHaveClass(
-      "relative",
       "tabular-nums",
       "font-mono",
       "text-xs",
@@ -84,10 +83,17 @@ describe("OrderBookRow", () => {
     await user.keyboard("{Enter}");
     expect(useUIStore.getState().selectedPrice).toBe(42500.5);
   });
-  it("renders DepthBar component", () => {
+  it("applies depth bar as full-row backgroundImage on bid side", () => {
     const { container } = render(<OrderBookRow level={mockLevel} side="bid" />);
-    const depthBar = container.querySelector("[class*='opacity-15']");
-    expect(depthBar).toBeInTheDocument();
+    const row = container.firstChild as HTMLElement;
+    expect(row.style.backgroundImage).toContain("trading-bid");
+    expect(row.style.backgroundImage).toContain("45%");
+  });
+
+  it("applies depth bar as full-row backgroundImage on ask side", () => {
+    const { container } = render(<OrderBookRow level={mockLevel} side="ask" />);
+    const row = container.firstChild as HTMLElement;
+    expect(row.style.backgroundImage).toContain("trading-ask");
   });
 
   it("formats prices with 2 decimal places", () => {

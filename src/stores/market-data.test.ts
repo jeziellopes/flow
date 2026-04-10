@@ -41,6 +41,8 @@ function createMockSource() {
     }),
     getSnapshot: vi.fn(),
     fetchKlines: vi.fn().mockResolvedValue([]),
+    onKlineUpdate: vi.fn(),
+    subscribeKlineStream: vi.fn(),
   };
 
   return {
@@ -83,6 +85,7 @@ function resetStore() {
     orderBook: null,
     trades: [],
     klines: [],
+    klineIsLiveTick: false,
     connectionStatus: "disconnected",
     symbol: null,
   });

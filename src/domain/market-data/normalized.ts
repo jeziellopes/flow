@@ -39,3 +39,9 @@ export interface NormalizedCandle {
   close: number;
   volume: number;
 }
+
+/** Live kline tick from the @kline_* WebSocket stream. */
+export interface NormalizedKlineUpdate extends NormalizedCandle {
+  /** true when the candle for this period has closed and a new one begins. */
+  isClosed: boolean;
+}
