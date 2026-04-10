@@ -1,3 +1,62 @@
+# [1.2.0-next.1](https://github.com/jeziellopes/flow/compare/v1.1.0...v1.2.0-next.1) (2026-04-10)
+
+
+### Bug Fixes
+
+* **chart+order-book:** real-time kline stream and full-row depth bar ([45be9af](https://github.com/jeziellopes/flow/commit/45be9afe4d891f4188ae8916c4dac8a098c23dd9)), closes [#154](https://github.com/jeziellopes/flow/issues/154) [#155](https://github.com/jeziellopes/flow/issues/155)
+* **chart:** default to last 100 bars instead of fitContent ([8a8ad7a](https://github.com/jeziellopes/flow/commit/8a8ad7a13aa23a4e391683634587cefa12809d2f)), closes [#157](https://github.com/jeziellopes/flow/issues/157)
+* **data-panel:** My Trades shows user fills + Activity tab isolation ([1239dac](https://github.com/jeziellopes/flow/commit/1239daca6a93481fa2513802c1995dc1d6d3ac78)), closes [#97](https://github.com/jeziellopes/flow/issues/97) [#108](https://github.com/jeziellopes/flow/issues/108)
+* **ds:** replace bg-ds-gray-800 with bg-muted in Badge; set DataPanel default to trades tab; rename column header to Qty ([acf005f](https://github.com/jeziellopes/flow/commit/acf005f35adfec11939f77fde9d71cc7528cc4f5)), closes [#138](https://github.com/jeziellopes/flow/issues/138) [#139](https://github.com/jeziellopes/flow/issues/139) [#145](https://github.com/jeziellopes/flow/issues/145)
+* **infra:** add order book gap detection and snapshot staleness check ([7a381a5](https://github.com/jeziellopes/flow/commit/7a381a5dde110d70f26e15a5b2eceae9ae12dac0)), closes [#117](https://github.com/jeziellopes/flow/issues/117)
+* **landing:** mark all features done; replace inline styles with Tailwind ([074229f](https://github.com/jeziellopes/flow/commit/074229fac79c445b9ffe035a7474896adfcd6018)), closes [#134](https://github.com/jeziellopes/flow/issues/134) [#137](https://github.com/jeziellopes/flow/issues/137)
+* **layout:** add sm breakpoint for market trades panel + correct DEFAULT_LAYOUTS v13 ([3815c6a](https://github.com/jeziellopes/flow/commit/3815c6af42e1265baa43466b9b33cb3d27cd867a))
+* **lint:** replace noNonNullAssertion violations in order-book test ([9cd395c](https://github.com/jeziellopes/flow/commit/9cd395cb7ff9c29768f198d248906b63a0c8bffe))
+* **lint:** resolve Biome import-order and noNonNullAssertion violations ([03d7c04](https://github.com/jeziellopes/flow/commit/03d7c04d0837be8fbf8ddc4f30a292c050b99c60))
+* **live-indicator:** add undefined to className for exactOptionalPropertyTypes ([34d4f54](https://github.com/jeziellopes/flow/commit/34d4f54f1f2d86b34891ec33b15d717b5aaca445))
+* **market-data:** align stream subscriptions with Binance spot reference ([7a9d848](https://github.com/jeziellopes/flow/commit/7a9d848e2cfafb1985ffad27809105e8075aa034)), closes [#129](https://github.com/jeziellopes/flow/issues/129)
+* **order-book:** align row font size with market trades (text-sm → text-xs, py-px → py-0.5) ([408d228](https://github.com/jeziellopes/flow/commit/408d2281925ef9903ad7b46b054c74ed7e50e451))
+* **order-book:** depth bar fills right-to-left on both bid and ask sides ([2d245ba](https://github.com/jeziellopes/flow/commit/2d245ba41f785ed67e9efe558e0a2dc5e91505df))
+* **order-book:** fix NaN bucketing, correct grouping options, move controls out of drag area ([107d942](https://github.com/jeziellopes/flow/commit/107d942232e73b2de1036838c8228bd7675d9569))
+* **order-book:** remove levels URL param, show 50 rows, clean tab param ([1a2beea](https://github.com/jeziellopes/flow/commit/1a2beea70041aee43b92f190a606dec3efca5b01))
+* **order-book:** replace aria-hidden with role=presentation on SVGs, remove stale Binance reference block ([be2084f](https://github.com/jeziellopes/flow/commit/be2084ffe8c9d081efd36905e577c847c62975bf))
+* **order-book:** reverse asks display order so best ask sits nearest spread ([065d02a](https://github.com/jeziellopes/flow/commit/065d02ab2df18674d2b0ffcb013feb1b195389c0))
+* **panel:** conditional cursor-move, title contrast + rich empty states ([2a32aa9](https://github.com/jeziellopes/flow/commit/2a32aa9116cdc8d0a24a553146a141ea883a097c)), closes [#141](https://github.com/jeziellopes/flow/issues/141) [#142](https://github.com/jeziellopes/flow/issues/142) [#143](https://github.com/jeziellopes/flow/issues/143) [#141](https://github.com/jeziellopes/flow/issues/141) [#142](https://github.com/jeziellopes/flow/issues/142) [#143](https://github.com/jeziellopes/flow/issues/143)
+* **routing:** cast redirect params as never to satisfy TS strict router types ([5f82204](https://github.com/jeziellopes/flow/commit/5f8220476d74dc4c7d390511cbcc31e7e3c5174d))
+* **routing:** link logo directly to /symbol/BTCUSDT ([cf730eb](https://github.com/jeziellopes/flow/commit/cf730eb45abb5733af3a7bf0f14357511a123d94))
+* **routing:** redirect legacy ?tab=book&levels params to clean URL ([187bad9](https://github.com/jeziellopes/flow/commit/187bad9d6444f93d4eb077549e43f38fb3b888a2))
+* **routing:** remove auto-redirect from / — landing page should be visible ([99bedf4](https://github.com/jeziellopes/flow/commit/99bedf477b96f2e0418fa0239aa3d93a6270a109))
+* **routing:** remove stale biome-ignore comment on never cast ([58c9f56](https://github.com/jeziellopes/flow/commit/58c9f561c954d86be2ffd14fe11844eacf8e169c))
+* **routing:** resolve TS errors from 'as never' route cast ([c1b7628](https://github.com/jeziellopes/flow/commit/c1b76288a362c9a4e5689587ee4c79931f4fed34))
+* **routing:** use location.searchStr in beforeLoad, align typecheck with build ([6ba9652](https://github.com/jeziellopes/flow/commit/6ba9652e2ab5351abe837660fa88707ef34d9bb0))
+* **styles:** update body font-family to Noto Sans Mono (stale Geist Mono ref) ([2eccda9](https://github.com/jeziellopes/flow/commit/2eccda90f9899d088916f47c0b91420914f56522))
+* **ui:** add font-mono tabular-nums to Input primitive for consistent number rendering ([17683dc](https://github.com/jeziellopes/flow/commit/17683dc305be1a6fe967e27a1726d4395a3d9275))
+
+
+### Features
+
+* **chart+portfolio:** wire real Binance klines and portfolio store ([ebd4b32](https://github.com/jeziellopes/flow/commit/ebd4b324a8444fb20252891f2f5e22bdf03af2c7)), closes [#151](https://github.com/jeziellopes/flow/issues/151) [#152](https://github.com/jeziellopes/flow/issues/152)
+* **infra:** WebSocket data layer — Binance live market data ([35791df](https://github.com/jeziellopes/flow/commit/35791df649c46e296cd4f2697df64bb9e34f8fb4)), closes [#99](https://github.com/jeziellopes/flow/issues/99)
+* **layout:** market trades as separate grid panel, My Trades for user fills ([7b90b0f](https://github.com/jeziellopes/flow/commit/7b90b0fe34be493857fd8cc9d7c49659b76545c2)), closes [#106](https://github.com/jeziellopes/flow/issues/106)
+* **layout:** market trades under order book, My Trades tab for user fills ([ef19bda](https://github.com/jeziellopes/flow/commit/ef19bdaeed7655b657907fce53a8e1d5307acd14)), closes [#106](https://github.com/jeziellopes/flow/issues/106)
+* **layout:** trades panel below order book (2/3+1/3), Price/Amount/Time columns ([208dce8](https://github.com/jeziellopes/flow/commit/208dce8b6464ba03835efb564907056dcf86283d))
+* **order-book:** column headers + semantic table structure ([20633d7](https://github.com/jeziellopes/flow/commit/20633d742ceceadb5eabac6d3f12c3ad106b1ac2)), closes [#140](https://github.com/jeziellopes/flow/issues/140) [#144](https://github.com/jeziellopes/flow/issues/144)
+* **order-book:** hover highlight + click to set limit price ([65a102b](https://github.com/jeziellopes/flow/commit/65a102b9cac650f74d3771944526e3772b82c1fb)), closes [#126](https://github.com/jeziellopes/flow/issues/126)
+* **order-book:** price grouping dropdown + view mode toggle ([#109](https://github.com/jeziellopes/flow/issues/109)) ([0c89887](https://github.com/jeziellopes/flow/commit/0c89887e9395e75ee50a80870cd2d6f8460374c8))
+* **order-book:** wire Order Book UI to live WebSocket data ([0549859](https://github.com/jeziellopes/flow/commit/0549859ae1c90ce5a41fa8b87492c175f2dcdf5e)), closes [#96](https://github.com/jeziellopes/flow/issues/96)
+* **order-entry:** simulated order entry with LocalFillEngine ([53ce52a](https://github.com/jeziellopes/flow/commit/53ce52ae7471701b5e00c6b99bb08b72f1a8066b)), closes [#97](https://github.com/jeziellopes/flow/issues/97)
+* **portfolio:** persist state to localStorage with reset button ([d092d95](https://github.com/jeziellopes/flow/commit/d092d9582c77d0a752d719e8c55425358ccee0e1)), closes [#133](https://github.com/jeziellopes/flow/issues/133)
+* **routing:** symbol route loaders with validation and error states ([014ca0e](https://github.com/jeziellopes/flow/commit/014ca0ef64e6b5fcc8ee9813028351ac8c542cc9)), closes [#96](https://github.com/jeziellopes/flow/issues/96) [#98](https://github.com/jeziellopes/flow/issues/98)
+* **ticker:** wire live price, OHLV, and tick direction from [@mini](https://github.com/mini)Ticker stream; fix portfolio widget ([ac6fd2e](https://github.com/jeziellopes/flow/commit/ac6fd2e333c73fbaeadc62d418c27af886556160)), closes [#135](https://github.com/jeziellopes/flow/issues/135) [#136](https://github.com/jeziellopes/flow/issues/136)
+* **ui:** add Dropdown primitive; refactor GroupingSelect to use it ([cc3e312](https://github.com/jeziellopes/flow/commit/cc3e3128090f681891c9e2f338541cf343c5fd6a))
+
+
+### Performance Improvements
+
+* **chart:** fix CandleChart blink via PortfolioWidget extraction + stable ref ([d6baa9a](https://github.com/jeziellopes/flow/commit/d6baa9a6d1d445c13771748faddad70a96ae2699)), closes [#105](https://github.com/jeziellopes/flow/issues/105) [#105](https://github.com/jeziellopes/flow/issues/105)
+* **order-book:** prevent CLS micro-stutters on live data updates ([475e041](https://github.com/jeziellopes/flow/commit/475e041640950da1a99562a85659ee78f576fe29)), closes [#118](https://github.com/jeziellopes/flow/issues/118)
+* **root:** scope store subscriptions to leaf components — fix [#104](https://github.com/jeziellopes/flow/issues/104) [#105](https://github.com/jeziellopes/flow/issues/105) ([1404b72](https://github.com/jeziellopes/flow/commit/1404b726a6d0019feb86a726f6f91b883151cb81)), closes [hi#freq](https://github.com/hi/issues/freq)
+* **tab:** fix blank screen and frozen UI on tab return ([e10f617](https://github.com/jeziellopes/flow/commit/e10f6173edbcafb65917c5a9fd7af94134104e60)), closes [#113](https://github.com/jeziellopes/flow/issues/113)
+
 # [1.1.0-next.26](https://github.com/jeziellopes/flow/compare/v1.1.0-next.25...v1.1.0-next.26) (2026-04-10)
 
 
