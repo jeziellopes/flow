@@ -1,3 +1,10 @@
+# [1.1.0-next.20](https://github.com/jeziellopes/flow/compare/v1.1.0-next.19...v1.1.0-next.20) (2026-04-10)
+
+
+### Bug Fixes
+
+* **ds:** replace bg-ds-gray-800 with bg-muted in Badge; set DataPanel default to trades tab; rename column header to Qty ([acf005f](https://github.com/jeziellopes/flow/commit/acf005f35adfec11939f77fde9d71cc7528cc4f5)), closes [#138](https://github.com/jeziellopes/flow/issues/138) [#139](https://github.com/jeziellopes/flow/issues/139) [#145](https://github.com/jeziellopes/flow/issues/145)
+
 # [1.1.0-next.19](https://github.com/jeziellopes/flow/compare/v1.1.0-next.18...v1.1.0-next.19) (2026-04-10)
 
 
