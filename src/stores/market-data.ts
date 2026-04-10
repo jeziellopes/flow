@@ -4,6 +4,7 @@ import type { MarketDataSource } from "@/domain/market-data/MarketDataSource";
 import type {
   NormalizedCandle,
   NormalizedDepthUpdate,
+  NormalizedKlineUpdate,
   NormalizedSnapshot,
   NormalizedTicker,
   NormalizedTrade,
@@ -21,6 +22,8 @@ interface MarketDataState {
   trades: NormalizedTrade[];
   ticker: NormalizedTicker | null;
   klines: NormalizedCandle[];
+  /** true when klines was updated by a live WebSocket tick (last candle only); false on full REST load. */
+  klineIsLiveTick: boolean;
   connectionStatus: ConnectionStatus;
   symbol: string | null;
   symbolInfo: SymbolInfo | null;
@@ -98,6 +101,7 @@ export const useMarketDataStore = create<MarketDataState & MarketDataActions>((s
   trades: [],
   ticker: null,
   klines: [],
+  klineIsLiveTick: false,
   connectionStatus: "disconnected",
   symbol: null,
   symbolInfo: null,
@@ -128,6 +132,31 @@ export const useMarketDataStore = create<MarketDataState & MarketDataActions>((s
       set({ ticker });
     });
 
+    source.onKlineUpdate((update: NormalizedKlineUpdate) => {
+      set((state) => {
+        if (state.klines.length === 0) return state;
+        const candle: NormalizedCandle = {
+          time: update.time,
+          open: update.open,
+          high: update.high,
+          low: update.low,
+          close: update.close,
+          volume: update.volume,
+        };
+        if (update.isClosed) {
+          // Append the closed candle; ring-buffer to 500
+          const appended =
+            state.klines.length >= 500
+              ? [...state.klines.slice(1), candle]
+              : [...state.klines, candle];
+          return { klines: appended, klineIsLiveTick: false };
+        }
+        // Update the last (in-progress) candle with the latest tick
+        const updated = [...state.klines.slice(0, -1), candle];
+        return { klines: updated, klineIsLiveTick: true };
+      });
+    });
+
     set({ symbol, connectionStatus: "reconnecting" });
 
     // AC-1: connect (starts buffering) then immediately fetch snapshot
@@ -154,6 +183,7 @@ export const useMarketDataStore = create<MarketDataState & MarketDataActions>((s
       trades: [],
       ticker: null,
       klines: [],
+      klineIsLiveTick: false,
       connectionStatus: "disconnected",
       symbol: null,
       symbolInfo: null,
@@ -164,7 +194,9 @@ export const useMarketDataStore = create<MarketDataState & MarketDataActions>((s
     if (!_source) return;
     try {
       const klines = await _source.fetchKlines(symbol, interval, 500);
-      set({ klines });
+      set({ klines, klineIsLiveTick: false });
+      // Subscribe to live kline stream now that the interval is known.
+      _source.subscribeKlineStream(symbol, interval);
     } catch {
       // Network failure — leave existing klines in place
     }

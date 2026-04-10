@@ -103,9 +103,18 @@ export function CandleChart({ symbol, interval = "15m" }: CandleChartProps) {
     // that would recreate the chart on every state change.
     let prevKlines = initial;
     const unsub = useMarketDataStore.subscribe((state) => {
-      if (state.klines !== prevKlines && state.klines.length > 0) {
-        prevKlines = state.klines;
-        series.setData(state.klines.map(toChartData));
+      if (state.klines === prevKlines) return;
+      const newKlines = state.klines;
+      prevKlines = newKlines;
+      if (newKlines.length === 0) return;
+
+      if (state.klineIsLiveTick) {
+        // Only the last candle changed — use efficient point update, no scroll jump
+        const last = newKlines[newKlines.length - 1];
+        if (last) series.update(toChartData(last));
+      } else {
+        // Full REST load or new candle appended — reset series and fit view
+        series.setData(newKlines.map(toChartData));
         chart.timeScale().fitContent();
       }
     });
