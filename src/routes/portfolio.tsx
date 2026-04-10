@@ -12,8 +12,8 @@ function RouteComponent() {
   const filledOrders = useFilledOrders();
   const openOrders = useOpenOrders();
 
-  const usdt = Number(balances["USDT"] ?? 0);
-  const btc = Number(balances["BTC"] ?? 0);
+  const usdt = Number(balances.USDT ?? 0);
+  const btc = Number(balances.BTC ?? 0);
 
   return (
     <ErrorBoundary>

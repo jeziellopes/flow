@@ -5,6 +5,7 @@ interface PanelProps {
   title: string;
   children: ReactNode;
   className?: string;
+  draggable?: boolean;
 }
 
 interface PanelHeaderProps {
@@ -36,7 +37,7 @@ function PanelContent({ children, noScroll = false, className }: PanelContentPro
   );
 }
 
-export function Panel({ title, children, className }: PanelProps) {
+export function Panel({ title, children, className, draggable = false }: PanelProps) {
   let extra: ReactNode = null;
   const bodyChildren: ReactNode[] = [];
 
@@ -55,8 +56,13 @@ export function Panel({ title, children, className }: PanelProps) {
         className,
       )}
     >
-      <div className="px-3 py-2 border-b border-border shrink-0 cursor-move flex items-center justify-between gap-2">
-        <h2 className="text-xs font-cypher font-semibold tracking-widest uppercase text-muted-foreground select-none">
+      <div
+        className={cn(
+          `px-3 py-2 border-b border-border shrink-0 flex items-center justify-between gap-2`,
+          draggable && `cursor-move`,
+        )}
+      >
+        <h2 className="text-xs font-cypher font-semibold tracking-widest uppercase text-foreground select-none">
           {title}
         </h2>
         {extra}
