@@ -1,7 +1,6 @@
-import { createRootRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
+import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
 import { Toaster, toast } from "sonner";
 import { ThemeDropdown } from "@/features/theme/theme-dropdown";
-import { TickerHeader } from "@/features/trading/ticker-header";
 import { useConnectionStatus } from "@/stores/market-data";
 import { useBalance } from "@/stores/portfolio";
 import { Button } from "@/ui/button";
@@ -35,8 +34,6 @@ function PortfolioWidget() {
 }
 
 function RootComponent() {
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const isSymbolRoute = pathname.startsWith("/symbol/");
   return (
     <ErrorBoundary
       fallback={(error) => (
@@ -59,9 +56,8 @@ function RootComponent() {
               className="font-brand text-sm font-bold tracking-widest select-none text-primary"
             >
               <Logo className="w-6 h-6" />
-              {!isSymbolRoute && <span className="ml-2">Flow</span>}
+              <span className="ml-2">Flow</span>
             </Link>
-            {isSymbolRoute && <TickerHeader />}
             <div className="flex-1" />
             <PortfolioWidget />
             <div className="w-px h-5 bg-border mx-1" />
