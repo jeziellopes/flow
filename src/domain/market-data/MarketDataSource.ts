@@ -1,6 +1,7 @@
 import type {
   NormalizedCandle,
   NormalizedDepthUpdate,
+  NormalizedKlineUpdate,
   NormalizedSnapshot,
   NormalizedTicker,
   NormalizedTrade,
@@ -26,4 +27,14 @@ export interface MarketDataSource {
 
   /** Fetch historical OHLCV candles from REST. Returns up to `limit` candles. */
   fetchKlines(symbol: string, interval: string, limit: number): Promise<NormalizedCandle[]>;
+
+  /** Register a callback for live kline updates from the WebSocket stream. */
+  onKlineUpdate(cb: (update: NormalizedKlineUpdate) => void): void;
+
+  /**
+   * Subscribe to the @kline_<interval> WebSocket stream.
+   * Call after fetchKlines() so the interval is known.
+   * Reconnects the combined stream to include the kline sub-stream.
+   */
+  subscribeKlineStream(symbol: string, interval: string): void;
 }

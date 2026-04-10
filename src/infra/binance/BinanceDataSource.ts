@@ -2,6 +2,7 @@ import type { MarketDataSource } from "@/domain/market-data/MarketDataSource";
 import type {
   NormalizedCandle,
   NormalizedDepthUpdate,
+  NormalizedKlineUpdate,
   NormalizedSnapshot,
   NormalizedTicker,
   NormalizedTrade,
@@ -43,12 +44,15 @@ export class BinanceDataSource implements MarketDataSource {
   private depthCallbacks: Array<(u: NormalizedDepthUpdate) => void> = [];
   private tradeCallbacks: Array<(t: NormalizedTrade) => void> = [];
   private tickerCallbacks: Array<(t: NormalizedTicker) => void> = [];
+  private klineCallbacks: Array<(u: NormalizedKlineUpdate) => void> = [];
 
   /** Depth events received before the snapshot was applied. */
   private depthBuffer: NormalizedDepthUpdate[] = [];
   /** lastUpdateId from the most recently applied snapshot. null = snapshot not yet applied. */
   private snapshotSeqId: number | null = null;
   private currentSymbol: string | null = null;
+  /** Kline interval subscribed via subscribeKlineStream. null = not yet requested. */
+  private currentKlineInterval: string | null = null;
 
   constructor() {
     this.reconnectManager.onReconnect(() => {
@@ -74,6 +78,7 @@ export class BinanceDataSource implements MarketDataSource {
     this.reconnectManager.reset();
     this.wsClient.close();
     this.currentSymbol = null;
+    this.currentKlineInterval = null;
     this.snapshotSeqId = null;
     this.depthBuffer = [];
   }
@@ -122,6 +127,18 @@ export class BinanceDataSource implements MarketDataSource {
     this.tickerCallbacks.push(cb);
   }
 
+  onKlineUpdate(cb: (update: NormalizedKlineUpdate) => void): void {
+    this.klineCallbacks.push(cb);
+  }
+
+  subscribeKlineStream(symbol: string, interval: string): void {
+    this.currentKlineInterval = interval;
+    // Reconnect combined stream to include the kline sub-stream.
+    // wsClient.connect() closes the old WS without triggering onDisconnect,
+    // so depth buffering and reconnect manager are not disrupted.
+    this.connectStreams(symbol);
+  }
+
   async fetchKlines(symbol: string, interval: string, limit: number): Promise<NormalizedCandle[]> {
     const url = `https://api.binance.com/api/v3/klines?symbol=${symbol.toUpperCase()}&interval=${interval}&limit=${limit}`;
     const res = await fetch(url);
@@ -139,7 +156,11 @@ export class BinanceDataSource implements MarketDataSource {
 
   private connectStreams(symbol: string): void {
     const s = symbol.toLowerCase();
-    this.wsClient.connect([`${s}@depth`, `${s}@aggTrade`, `${s}@miniTicker`]);
+    const streams = [`${s}@depth`, `${s}@aggTrade`, `${s}@miniTicker`];
+    if (this.currentKlineInterval) {
+      streams.push(`${s}@kline_${this.currentKlineInterval}`);
+    }
+    this.wsClient.connect(streams);
     this.emitStatus("reconnecting");
   }
 
@@ -180,6 +201,17 @@ export class BinanceDataSource implements MarketDataSource {
         lowPrice: msg.l,
         volume: msg.v,
       });
+    } else if (msg.e === "kline") {
+      const k = msg.k;
+      this.emitKlineUpdate({
+        time: Math.floor(k.t / 1000),
+        open: Number(k.o),
+        high: Number(k.h),
+        low: Number(k.l),
+        close: Number(k.c),
+        volume: Number(k.v),
+        isClosed: k.x,
+      });
     }
   }
 
@@ -204,5 +236,9 @@ export class BinanceDataSource implements MarketDataSource {
 
   private emitTicker(ticker: NormalizedTicker): void {
     for (const cb of this.tickerCallbacks) cb(ticker);
+  }
+
+  private emitKlineUpdate(update: NormalizedKlineUpdate): void {
+    for (const cb of this.klineCallbacks) cb(update);
   }
 }
