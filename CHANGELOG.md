@@ -1,3 +1,10 @@
+# [1.1.0-next.17](https://github.com/jeziellopes/flow/compare/v1.1.0-next.16...v1.1.0-next.17) (2026-04-10)
+
+
+### Features
+
+* **order-entry:** simulated order entry with LocalFillEngine ([53ce52a](https://github.com/jeziellopes/flow/commit/53ce52ae7471701b5e00c6b99bb08b72f1a8066b)), closes [#97](https://github.com/jeziellopes/flow/issues/97)
+
 # [1.1.0-next.16](https://github.com/jeziellopes/flow/compare/v1.1.0-next.15...v1.1.0-next.16) (2026-04-07)
 
 
