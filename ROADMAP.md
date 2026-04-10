@@ -144,7 +144,9 @@ The frontend interfaces are delivered with P0/P1. Backend implementations are a 
 | Area | Status |
 |------|--------|
 | Three-layer token architecture (`--t-*` → semantic → @theme) | ✅ Complete |
-| `@theme inline` — semantic + trading + sidebar + duration tokens | ✅ Complete (#13) |
-| Component token usage (`bg-trading-bid`, `text-trading-ask`, etc.) | ✅ Complete (#13) |
-| React composition patterns (compound components, prop grouping) | 🔄 In progress (#14) |
-| Route component extraction into `features/` + `ui/` primitives | 🔄 In progress (#15) |
+| `@theme inline` — semantic + trading + sidebar + duration tokens | ✅ Complete — [#13](https://github.com/jeziellopes/flow/pull/13) |
+| Component token usage (`bg-trading-bid`, `text-trading-ask`, etc.) | ✅ Complete — [#13](https://github.com/jeziellopes/flow/pull/13) |
+| React composition patterns (compound components, prop grouping) | ✅ Complete — [#64](https://github.com/jeziellopes/flow/pull/64) |
+| Route component extraction into `features/` + `ui/` primitives | ✅ Complete — [#115](https://github.com/jeziellopes/flow/pull/115) |
+| Typography overhaul — Rajdhani (brand) + Noto Sans Mono (mono) | ✅ Complete — [#122](https://github.com/jeziellopes/flow/pull/122) |
+| Tailwind className lint enforcement (`eslint-plugin-better-tailwindcss`) | ✅ Complete — [#131](https://github.com/jeziellopes/flow/pull/131) |
