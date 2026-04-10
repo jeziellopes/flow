@@ -1,31 +1,28 @@
-import { OrderBookRow, type PriceLevel } from "./order-book-row";
+import { OrderBookRow } from "./order-book-row";
+import type { PriceLevel } from "./types";
 
 interface TableProps {
   levels: PriceLevel[];
 }
 
 export function BidTable({ levels }: TableProps) {
-  // Bids sorted highest price first
-  const sortedLevels = [...levels].sort((a, b) => b.price - a.price);
-
   return (
-    <div className="space-y-px">
-      {sortedLevels.map((level) => (
+    <tbody>
+      {levels.map((level) => (
         <OrderBookRow key={`bid-${level.price}`} level={level} side="bid" />
       ))}
-    </div>
+    </tbody>
   );
 }
 
 export function AskTable({ levels }: TableProps) {
-  // Asks sorted highest price first — lowest ask (best ask) ends up nearest the spread
-  const sortedLevels = [...levels].sort((a, b) => b.price - a.price);
-
+  // Asks arrive lowest-first (asc) — reverse so highest price is at top,
+  // best ask (lowest) sits at the bottom adjacent to the spread (Binance style).
   return (
-    <div className="space-y-px">
-      {sortedLevels.map((level) => (
+    <tbody>
+      {[...levels].reverse().map((level) => (
         <OrderBookRow key={`ask-${level.price}`} level={level} side="ask" />
       ))}
-    </div>
+    </tbody>
   );
 }

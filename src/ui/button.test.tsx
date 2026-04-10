@@ -87,10 +87,11 @@ describe("Button", () => {
     expect(ref.current).toBeInstanceOf(HTMLButtonElement);
   });
 
-  it("applies font-normal on base variant", () => {
+  it("applies font-cypher font-medium on base variant", () => {
     render(<Button>Base</Button>);
     const btn = screen.getByRole("button");
-    expect(btn).toHaveClass("font-normal");
+    expect(btn).toHaveClass("font-cypher");
+    expect(btn).toHaveClass("font-medium");
   });
 
   it("applies font-medium on buy variant", () => {

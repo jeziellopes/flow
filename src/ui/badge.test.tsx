@@ -17,7 +17,7 @@ describe("Badge", () => {
   it("applies default variant (pill) classes when no variant specified", () => {
     render(<Badge>Default</Badge>);
     const el = screen.getByText("Default");
-    expect(el).toHaveClass("bg-ds-gray-800", "text-muted-foreground");
+    expect(el).toHaveClass("bg-muted", "text-muted-foreground");
   });
 
   it("applies active variant classes", () => {
@@ -65,7 +65,7 @@ describe("Badge", () => {
   it("applies stat variant classes (different sizing: text-xs)", () => {
     render(<Badge variant="stat">123</Badge>);
     const el = screen.getByText("123");
-    expect(el).toHaveClass("text-xs", "bg-ds-gray-800", "px-2", "py-1");
+    expect(el).toHaveClass("text-xs", "bg-muted", "px-2", "py-1");
   });
 
   it("merges custom className with variant classes", () => {

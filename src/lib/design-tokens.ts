@@ -3,12 +3,12 @@
 
 export const designTokens = {
   fonts: {
-    "share-tech-mono": '"Share Tech Mono"',
+    "noto-sans-mono": '"Noto Sans Mono"',
+    rajdhani: '"Rajdhani"',
     orbitron: '"Orbitron"',
-    "fira-mono": '"Fira Mono"',
   },
   semantic: {
-    "--background": "oklch(0.98 0.004 265)",
+    "--background": "oklch(0.95 0.004 265)",
     "--foreground": "oklch(0.12 0.008 265)",
     "--card": "oklch(0.99 0.004 265)",
     "--card-foreground": "oklch(0.12 0.008 265)",
@@ -24,7 +24,7 @@ export const designTokens = {
     "--accent-foreground": "oklch(0.12 0.008 265)",
     "--destructive": "oklch(0.56 0.24 27 )",
     "--destructive-foreground": "oklch(0.97 0    0  )",
-    "--border": "oklch(0.87 0.004 265)",
+    "--border": "oklch(0.83 0.004 265)",
     "--input": "oklch(0.96 0.004 265)",
     "--ring": "oklch(0.62 0.22 280)",
   },

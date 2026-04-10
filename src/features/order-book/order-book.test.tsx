@@ -33,13 +33,13 @@ describe("OrderBook", () => {
   it("asks container scrolls independently", () => {
     render(<OrderBook state={MOCK_ORDER_BOOK_STATE} />);
     const asksContainer = screen.getByTestId("asks-container");
-    expect(asksContainer).toHaveClass("overflow-y-auto", "flex-1");
+    expect(asksContainer).toHaveClass("overflow-y-scroll", "flex-1");
   });
 
   it("bids container scrolls independently", () => {
     render(<OrderBook state={MOCK_ORDER_BOOK_STATE} />);
     const bidsContainer = screen.getByTestId("bids-container");
-    expect(bidsContainer).toHaveClass("overflow-y-auto", "flex-1");
+    expect(bidsContainer).toHaveClass("overflow-y-scroll", "flex-1");
   });
 
   it("spread bar is not inside a scrollable container", () => {

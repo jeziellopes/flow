@@ -35,7 +35,7 @@ const labelVariants = cva("text-[10px] font-mono uppercase", {
 });
 
 export type LiveIndicatorProps = VariantProps<typeof liveIndicatorVariants> & {
-  className?: string;
+  className?: string | undefined;
 };
 
 const STATUS_LABEL: Record<string, string> = {

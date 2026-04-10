@@ -4,15 +4,25 @@ on:
   pull_request:
     branches: [main, develop]
     types: [opened, edited, synchronize, reopened, labeled, unlabeled, milestoned, demilestoned]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+
+concurrency:
+  group: pr-hygiene-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 jobs:
-  pr-hygiene-base-branch:
-    name: Base branch
+  pr-hygiene:
+    name: PR Hygiene
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
+      contents: read
     steps:
-      - name: Enforce develop as base for feature PRs
+      - name: Base branch
+        id: branch
+        continue-on-error: true
         uses: actions/github-script@v8
         with:
           script: |
@@ -30,13 +40,9 @@ jobs:
               core.notice(`✅ Base branch valid: ${head} → ${base}`);
             }
 
-  pr-hygiene-title:
-    name: PR title format
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: read
-    steps:
-      - name: Check PR title format
+      - name: PR title format
+        id: title
+        continue-on-error: true
         uses: actions/github-script@v8
         with:
           script: |
@@ -56,13 +62,9 @@ jobs:
               core.notice(`✅ PR title format valid: "${title}"`);
             }
 
-  pr-hygiene-labels:
-    name: Required labels
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: read
-    steps:
-      - name: Check required labels
+      - name: Required labels
+        id: labels
+        continue-on-error: true
         uses: actions/github-script@v8
         with:
           script: |
@@ -80,13 +82,9 @@ jobs:
               core.notice(`✅ Labels present: ${matched.join(', ')}`);
             }
 
-  pr-hygiene-milestone:
-    name: Milestone assignment
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: read
-    steps:
-      - name: Check milestone assignment
+      - name: Milestone assignment
+        id: milestone
+        continue-on-error: true
         uses: actions/github-script@v8
         with:
           script: |
@@ -97,14 +95,9 @@ jobs:
               core.notice(`ℹ️  No milestone — semantic-release handles versioning automatically.`);
             }
 
-  pr-hygiene-docs:
-    name: Documentation freshness
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: read
-      contents: read
-    steps:
-      - name: Check docs freshness on feat PRs
+      - name: Documentation freshness
+        id: docs
+        continue-on-error: true
         uses: actions/github-script@v8
         with:
           script: |
@@ -146,15 +139,9 @@ jobs:
               core.notice(`✅ Docs up-to-date (ROADMAP.md and README.md updated).`);
             }
 
-
-  pr-hygiene-no-coauthor:
-    name: No Co-authored-by trailers
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: read
-      contents: read
-    steps:
-      - name: Check commits for Co-authored-by trailers
+      - name: No Co-authored-by trailers
+        id: coauthor
+        continue-on-error: true
         uses: actions/github-script@v8
         with:
           script: |
@@ -181,3 +168,86 @@ jobs:
             } else {
               core.notice(`✅ No Co-authored-by trailers found in ${commits.length} commit(s).`);
             }
+
+      - name: DCO sign-off
+        id: dco
+        continue-on-error: true
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const { data: commits } = await github.rest.pulls.listCommits({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+              per_page: 100,
+            });
+
+            const missing = commits
+              .filter(c => c.parents.length < 2) // skip GitHub-generated merge commits
+              .filter(c => !c.commit.message.includes('Signed-off-by:'))
+              .map(c => `  ${c.sha.slice(0, 7)} ${c.commit.message.split('\n')[0]}`);
+
+            if (missing.length > 0) {
+              core.setFailed(
+                `${missing.length} commit(s) are missing a DCO Signed-off-by line:\n${missing.join('\n')}\n\n` +
+                `To fix, amend each commit with:\n` +
+                `  git commit --amend -s\n\n` +
+                `Or use 'git commit -s' for all future commits.\n` +
+                `See CONTRIBUTING.md for details.`
+              );
+            }
+
+      - name: Write job summary
+        if: always()
+        uses: actions/github-script@v8
+        env:
+          BRANCH_OUTCOME: ${{ steps.branch.outcome }}
+          TITLE_OUTCOME: ${{ steps.title.outcome }}
+          LABELS_OUTCOME: ${{ steps.labels.outcome }}
+          MILESTONE_OUTCOME: ${{ steps.milestone.outcome }}
+          DOCS_OUTCOME: ${{ steps.docs.outcome }}
+          COAUTHOR_OUTCOME: ${{ steps.coauthor.outcome }}
+          DCO_OUTCOME: ${{ steps.dco.outcome }}
+        with:
+          script: |
+            const icon = o => o === 'success' ? '✅' : o === 'failure' ? '❌' : '⏭️';
+            const rows = [
+              ['Base branch',            process.env.BRANCH_OUTCOME],
+              ['PR title format',        process.env.TITLE_OUTCOME],
+              ['Required labels',        process.env.LABELS_OUTCOME],
+              ['Milestone',              process.env.MILESTONE_OUTCOME],
+              ['Documentation freshness',process.env.DOCS_OUTCOME],
+              ['No Co-authored-by',      process.env.COAUTHOR_OUTCOME],
+              ['DCO sign-off',           process.env.DCO_OUTCOME],
+            ];
+            const table = rows.map(([name, outcome]) =>
+              `| ${icon(outcome)} ${name} | \`${outcome}\` |`
+            ).join('\n');
+            await core.summary
+              .addHeading('PR Hygiene Results')
+              .addRaw(`| Check | Result |\n|---|---|\n${table}`)
+              .write();
+
+      - name: Fail if any check failed
+        if: always()
+        uses: actions/github-script@v8
+        env:
+          BRANCH_OUTCOME: ${{ steps.branch.outcome }}
+          TITLE_OUTCOME: ${{ steps.title.outcome }}
+          LABELS_OUTCOME: ${{ steps.labels.outcome }}
+          COAUTHOR_OUTCOME: ${{ steps.coauthor.outcome }}
+          DCO_OUTCOME: ${{ steps.dco.outcome }}
+        with:
+          script: |
+            const failures = [
+              ['Base branch',        process.env.BRANCH_OUTCOME],
+              ['PR title format',    process.env.TITLE_OUTCOME],
+              ['Required labels',    process.env.LABELS_OUTCOME],
+              ['No Co-authored-by',  process.env.COAUTHOR_OUTCOME],
+              ['DCO sign-off',       process.env.DCO_OUTCOME],
+            ].filter(([, o]) => o === 'failure').map(([name]) => name);
+
+            if (failures.length > 0) {
+              core.setFailed(`${failures.length} check(s) failed: ${failures.join(', ')}`);
+            }
+

@@ -5,10 +5,12 @@ import {
   createChart,
   type Time,
 } from "lightweight-charts";
-import { MOCK_CANDLES_BY_INTERVAL } from "@/lib/mock-data";
+import { useEffect } from "react";
+import type { NormalizedCandle } from "@/domain/market-data/normalized";
+import { useMarketDataStore } from "@/stores/market-data";
 
 interface CandleChartProps {
-  /** Interval key matching MOCK_CANDLES_BY_INTERVAL. Defaults to "15m". */
+  symbol: string;
   interval?: string;
 }
 
@@ -40,7 +42,17 @@ function withAlpha(rgb: string, alpha: number): string {
   return `rgba(${m[1]}, ${m[2]}, ${m[3]}, ${alpha})`;
 }
 
-export function CandleChart({ interval = "15m" }: CandleChartProps) {
+function toChartData(c: NormalizedCandle): CandlestickData<Time> {
+  return { time: c.time as Time, open: c.open, high: c.high, low: c.low, close: c.close };
+}
+
+export function CandleChart({ symbol, interval = "15m" }: CandleChartProps) {
+  // Kick off klines fetch on mount. Component remounts via key={activeTimeframe}
+  // on interval change, so this effect runs once per interval.
+  useEffect(() => {
+    void useMarketDataStore.getState().loadKlines(symbol, interval);
+  }, [symbol, interval]);
+
   const chartRef = (el: HTMLDivElement | null) => {
     if (!el) return;
 
@@ -80,32 +92,58 @@ export function CandleChart({ interval = "15m" }: CandleChartProps) {
       borderVisible: false,
     });
 
-    const raw = MOCK_CANDLES_BY_INTERVAL[interval] ?? MOCK_CANDLES_BY_INTERVAL["15m"] ?? [];
-    const data: CandlestickData<Time>[] = raw.map((c) => ({
-      time: c.time as Time,
-      open: c.o,
-      high: c.h,
-      low: c.l,
-      close: c.c,
-    }));
-    series.setData(data);
-    chart.timeScale().fitContent();
+    // Show the most recent N bars by default — avoids compressing 500 candles into view.
+    const VISIBLE_BARS = 100;
+    function showLatestBars(len: number): void {
+      chart
+        .timeScale()
+        .setVisibleLogicalRange({ from: Math.max(0, len - VISIBLE_BARS), to: len + 3 });
+    }
 
-    let fitted = false;
+    // Seed from already-loaded klines (handles race where data arrives before mount)
+    const initial = useMarketDataStore.getState().klines;
+    if (initial.length > 0) {
+      series.setData(initial.map(toChartData));
+      showLatestBars(initial.length);
+    }
+
+    // Subscribe to future klines updates imperatively — avoids React re-renders
+    // that would recreate the chart on every state change.
+    let prevKlines = initial;
+    let rangeSet = initial.length > 0;
+    const unsub = useMarketDataStore.subscribe((state) => {
+      if (state.klines === prevKlines) return;
+      const newKlines = state.klines;
+      prevKlines = newKlines;
+      if (newKlines.length === 0) return;
+
+      if (state.klineIsLiveTick) {
+        // Only the last candle changed — use efficient point update, no view change
+        const last = newKlines[newKlines.length - 1];
+        if (last) series.update(toChartData(last));
+      } else {
+        // Full REST load or new candle appended — reset series, anchor to right edge
+        series.setData(newKlines.map(toChartData));
+        showLatestBars(newKlines.length);
+        rangeSet = true;
+      }
+    });
+
     const ro = new ResizeObserver((entries) => {
       for (const entry of entries) {
         const { width, height } = entry.contentRect;
         if (width === 0 || height === 0) continue;
         chart.resize(width, height);
-        if (!fitted) {
+        // If data hasn't loaded yet when chart first renders, set range as fallback
+        if (!rangeSet) {
           chart.timeScale().fitContent();
-          fitted = true;
         }
       }
     });
     ro.observe(el);
 
     return () => {
+      unsub();
       ro.disconnect();
       chart.remove();
     };

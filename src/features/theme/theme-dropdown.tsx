@@ -11,12 +11,14 @@ const MODE_STORAGE_KEY = "mode";
 
 // One-time migration: copy old keys to new keys then remove old
 (function migrateStorageKeys() {
-  if (localStorage.getItem("trading-theme") && !localStorage.getItem("theme")) {
-    localStorage.setItem("theme", localStorage.getItem("trading-theme")!);
+  const oldTheme = localStorage.getItem("trading-theme");
+  if (oldTheme && !localStorage.getItem("theme")) {
+    localStorage.setItem("theme", oldTheme);
     localStorage.removeItem("trading-theme");
   }
-  if (localStorage.getItem("trading-mode") && !localStorage.getItem("mode")) {
-    localStorage.setItem("mode", localStorage.getItem("trading-mode")!);
+  const oldMode = localStorage.getItem("trading-mode");
+  if (oldMode && !localStorage.getItem("mode")) {
+    localStorage.setItem("mode", oldMode);
     localStorage.removeItem("trading-mode");
   }
 })();
@@ -117,7 +119,11 @@ export function ThemeDropdown() {
                 type="button"
                 onClick={() => selectTheme(t.id)}
                 className={cn(
-                  "w-full flex items-center gap-2 px-3 py-1.5 text-xs hover:bg-muted transition-colors cursor-pointer text-left",
+                  `
+                    w-full flex items-center gap-2 px-3 py-1.5 text-xs
+                    hover:bg-muted
+                    transition-colors cursor-pointer text-left
+                  `,
                   t.id === theme ? "text-primary" : "text-foreground",
                 )}
               >
@@ -140,7 +146,10 @@ export function ThemeDropdown() {
                 title={m.label}
                 aria-label={m.label}
                 className={cn(
-                  "flex items-center justify-center flex-1 h-6 rounded cursor-pointer transition-colors",
+                  `
+                    flex items-center justify-center flex-1 h-6 rounded cursor-pointer
+                    transition-colors
+                  `,
                   m.id === mode
                     ? "bg-primary text-on-primary"
                     : "bg-transparent text-muted-foreground",

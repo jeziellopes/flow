@@ -1,27 +1,28 @@
-import { useState } from "react";
+import { Activity, type ReactNode, useState } from "react";
 import { BotManagerPanel } from "@/features/bots/bot-manager-panel";
 import type { BotInstance, BotStatus } from "@/features/bots/types";
-import { RecentTradesTable } from "@/features/trades/recent-trades-table";
-import type { TerminalTrade } from "@/lib/mock-data";
+import { OpenOrders } from "@/features/order-entry/open-orders";
 import { cn } from "@/lib/utils";
 import { Tab, TabList } from "@/ui/tabs";
 
 interface DataPanelProps {
   bots: BotInstance[];
-  trades: TerminalTrade[];
+  /** Render slot for the trades tab — caller owns the data subscription. */
+  TradesFeedSlot: ReactNode;
   onBotStatusChange: (id: string, status: BotStatus) => void;
   className?: string;
 }
 
 const TABS = [
-  { value: "trades", label: "Trades" },
+  { value: "trades", label: "My Trades" },
+  { value: "orders", label: "Open Orders" },
   { value: "bots", label: "Bots" },
 ] as const;
 
 type TabValue = (typeof TABS)[number]["value"];
 
 /** Self-contained panel — owns its own chrome matching Panel header height/typography. */
-export function DataPanel({ bots, trades, onBotStatusChange, className }: DataPanelProps) {
+export function DataPanel({ bots, TradesFeedSlot, onBotStatusChange, className }: DataPanelProps) {
   const [activeTab, setActiveTab] = useState<TabValue>("trades");
 
   return (
@@ -47,8 +48,15 @@ export function DataPanel({ bots, trades, onBotStatusChange, className }: DataPa
       </div>
 
       <div className="flex-1 min-h-0 overflow-y-auto">
-        {activeTab === "trades" && <RecentTradesTable trades={trades} />}
-        {activeTab === "bots" && <BotManagerPanel bots={bots} onStatusChange={onBotStatusChange} />}
+        <Activity mode={activeTab === "trades" ? "visible" : "hidden"}>{TradesFeedSlot}</Activity>
+        <Activity mode={activeTab === "orders" ? "visible" : "hidden"}>
+          <div className="p-3">
+            <OpenOrders />
+          </div>
+        </Activity>
+        <Activity mode={activeTab === "bots" ? "visible" : "hidden"}>
+          <BotManagerPanel bots={bots} onStatusChange={onBotStatusChange} />
+        </Activity>
       </div>
     </div>
   );

@@ -19,17 +19,8 @@ export function ConnectionBanner({ status }: ConnectionBannerProps) {
   }
 
   return (
-    <div
-      className={cn(base)}
-      style={{
-        backgroundColor: "var(--trading-disconnected-bg)",
-        borderColor: "var(--trading-disconnected-border)",
-      }}
-    >
-      <div
-        className="w-2 h-2 rounded-full flex-shrink-0"
-        style={{ backgroundColor: "var(--trading-disconnected)" }}
-      />
+    <div className={cn(base, "bg-trading-disconnected-bg border-trading-disconnected-border")}>
+      <div className="w-2 h-2 rounded-full flex-shrink-0 bg-trading-disconnected" />
       <span>Disconnected — check connection</span>
     </div>
   );

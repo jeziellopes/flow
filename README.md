@@ -1,22 +1,32 @@
-# Flow
+<div align="center">
+  <img width="806" height="169" alt="Flow — Real-time Trading Terminal" src="https://github.com/user-attachments/assets/a6a17139-76aa-4712-a09d-e480fe67d8a3" />
 
-[![Tests](https://github.com/jeziellopes/flow/actions/workflows/test.yml/badge.svg?branch=develop)](https://github.com/jeziellopes/flow/actions/workflows/test.yml)
-[![Code Quality](https://github.com/jeziellopes/flow/actions/workflows/code-quality.yml/badge.svg?branch=develop)](https://github.com/jeziellopes/flow/actions/workflows/code-quality.yml)
-[![DCO](https://github.com/jeziellopes/flow/actions/workflows/dco.yml/badge.svg?branch=develop)](https://github.com/jeziellopes/flow/actions/workflows/dco.yml)
+  <p><strong>Real-time crypto trading terminal — live Binance data, 60 fps, zero manual memoization.</strong></p>
 
-I'm building a real-time trading terminal simulator as a portfolio project to demonstrate React 19.2, Vite 8, Zustand, and WebSocket data handling with live Binance market data — rendered at 60fps with zero manual memoization.
+  <p>
+    <a href="https://github.com/jeziellopes/flow/actions/workflows/test.yml"><img src="https://github.com/jeziellopes/flow/actions/workflows/test.yml/badge.svg?branch=develop" alt="Tests"></a>
+    <a href="https://github.com/jeziellopes/flow/actions/workflows/code-quality.yml"><img src="https://github.com/jeziellopes/flow/actions/workflows/code-quality.yml/badge.svg?branch=develop" alt="Code Quality"></a>
+    <a href="https://github.com/jeziellopes/flow/releases"><img src="https://img.shields.io/github/v/release/jeziellopes/flow?include_prereleases&label=release&color=00c7ff&logo=github" alt="Latest Release"></a>
+    <img src="https://img.shields.io/badge/React-19.2-61dafb?logo=react&logoColor=white" alt="React 19.2">
+    <img src="https://img.shields.io/badge/TypeScript-5.8-3178c6?logo=typescript&logoColor=white" alt="TypeScript 5.8">
+  </p>
+</div>
 
-> **Status: Active development.** Core UI and design system are complete. WebSocket data layer in progress.
+Production-grade trading terminal simulator running entirely in the browser — live order books, real-time candlestick charts, simulated order fills, and a multi-theme design system, built on React 19, Vite 8 (Rolldown + Oxc), and Ports & Adapters architecture.
 
-**Live demo:** Vercel preview available on every PR — see the Vercel bot comment for the latest URL.
+> **Status: P0 + P1 complete.** All core trading features are live: order book, trades feed, OHLCV chart, ticker, simulated order entry, and portfolio tracking — all on real Binance WebSocket data.
 
-## What I'm Building
+**Live demo:** Vercel preview on every PR — see the Vercel bot comment for the latest URL.
+
+## What It Does
 
 A cyberpunk-themed crypto trading dashboard that mirrors the architecture of a real exchange frontend:
 
-- **Live order book** — bid/ask depth levels with depth bars, spread display, real-time tick animation
-- **Simulated order entry** — market and limit orders against live Binance prices
-- **Portfolio tracker** — balances, open positions, unrealized PnL, trade history
+- **Live order book** — bid/ask depth levels with full-row depth bars, spread display, price grouping, hover-to-prefill, real-time tick animation
+- **OHLCV candlestick chart** — lightweight-charts, real Binance kline REST + WebSocket stream, defaults to last 100 bars
+- **Real-time ticker** — live price, 24h high/low/volume from `@miniTicker` stream with tick direction animation
+- **Simulated order entry** — market and limit orders against live Binance prices, filled by `LocalFillEngine`
+- **Portfolio tracker** — balances, open positions, unrealized PnL, trade history; live PnL from ticker stream
 - **Draggable dashboard** — panels resize and reorder via `react-grid-layout`, layout persisted to localStorage
 - **Design system** — five cyberpunk themes × three modes with WCAG contrast enforcement
 
@@ -102,16 +112,16 @@ Browse the live gallery at `/design-system` — includes a theme/mode switcher, 
 
 ## Roadmap
 
-Active work:
+All P0 + P1 features are shipped. See [`ROADMAP.md`](ROADMAP.md) for P2 stretch goals and architectural notes.
 
 | Priority | Feature | Status |
 |----------|---------|--------|
-| P0 | WebSocket data layer (Binance) | 🔄 In progress |
-| P0 | Symbol routing with typed params | 🔄 In progress |
-| P1 | Simulated order entry (fills at live price) | 📋 Spec ready |
-| P1 | Portfolio tracker with live PnL | 📋 Spec ready |
-
-See [`ROADMAP.md`](ROADMAP.md) for the full priority list, architectural trade-offs, and implementation rationale.
+| ✅ | WebSocket data layer (Binance) | Merged — [#100](https://github.com/jeziellopes/flow/pull/100) |
+| ✅ | Symbol routing with typed params | Merged — [#102](https://github.com/jeziellopes/flow/pull/102) |
+| ✅ | Order book UI wired to live data | Merged — [#103](https://github.com/jeziellopes/flow/pull/103), [#111](https://github.com/jeziellopes/flow/pull/111), [#127](https://github.com/jeziellopes/flow/pull/127), [#149](https://github.com/jeziellopes/flow/pull/149) |
+| ✅ | Simulated order entry (fills at live price) | Merged — [#132](https://github.com/jeziellopes/flow/pull/132) |
+| ✅ | Portfolio tracker with live PnL | Merged — [#153](https://github.com/jeziellopes/flow/pull/153) |
+| ✅ | OHLCV candlestick chart (real-time klines) | Merged — [#153](https://github.com/jeziellopes/flow/pull/153), [#156](https://github.com/jeziellopes/flow/pull/156) |
 
 ## Docs
 

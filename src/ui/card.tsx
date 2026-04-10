@@ -6,7 +6,11 @@ export function Card({ className, ...props }: CardProps) {
   return (
     <div
       className={cn(
-        "flex flex-col gap-3 p-4 rounded-md border border-border bg-card hover:border-primary/30 transition-all duration-200",
+        `
+          flex flex-col gap-3 p-4 rounded-md border border-border bg-card
+          hover:border-primary/30
+          transition-all duration-200
+        `,
         className,
       )}
       {...props}

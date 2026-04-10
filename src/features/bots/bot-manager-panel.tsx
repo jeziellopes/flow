@@ -105,7 +105,7 @@ export function BotManagerPanel({ bots, onStatusChange, onCreateBot }: BotManage
                 >
                   {/* Name */}
                   <td className="px-2 py-1.5">
-                    <span className="font-cypher font-semibold text-xs whitespace-nowrap">
+                    <span className="font-mono font-semibold text-xs whitespace-nowrap">
                       {bot.name}
                     </span>
                   </td>
@@ -126,7 +126,10 @@ export function BotManagerPanel({ bots, onStatusChange, onCreateBot }: BotManage
                   <td className="px-2 py-1.5">
                     <span
                       className={cn(
-                        "rounded-full px-1.5 py-0.5 text-[9px] font-mono uppercase tracking-wide font-semibold",
+                        `
+                          rounded-full px-1.5 py-0.5 text-[9px] font-mono uppercase tracking-wide
+                          font-semibold
+                        `,
                         statusClasses(bot.status),
                       )}
                     >
@@ -162,9 +165,8 @@ export function BotManagerPanel({ bots, onStatusChange, onCreateBot }: BotManage
                         <>
                           <Button
                             intent="ghost"
-                            size="xs"
+                            size="icon"
                             type="button"
-                            className="w-6 h-6 p-0"
                             title="Pause"
                             aria-label="Pause bot"
                             onClick={() => onStatusChange(bot.id, "paused")}
@@ -173,9 +175,9 @@ export function BotManagerPanel({ bots, onStatusChange, onCreateBot }: BotManage
                           </Button>
                           <Button
                             intent="ghost"
-                            size="xs"
+                            size="icon"
                             type="button"
-                            className="w-6 h-6 p-0 text-trading-ask"
+                            className="text-trading-ask"
                             title="Stop"
                             aria-label="Stop bot"
                             onClick={() => onStatusChange(bot.id, "stopped")}
@@ -186,20 +188,22 @@ export function BotManagerPanel({ bots, onStatusChange, onCreateBot }: BotManage
                       )}
                       {bot.status === "paused" && (
                         <>
-                          <button
+                          <Button
+                            intent="ghost"
+                            size="icon"
                             type="button"
-                            className="flex items-center justify-center w-6 h-6 rounded cursor-pointer text-trading-bid hover:text-foreground hover:bg-muted transition-colors"
+                            className="text-trading-bid"
                             title="Run"
                             aria-label="Run bot"
                             onClick={() => onStatusChange(bot.id, "running")}
                           >
                             <Play size={11} />
-                          </button>
+                          </Button>
                           <Button
                             intent="ghost"
-                            size="xs"
+                            size="icon"
                             type="button"
-                            className="w-6 h-6 p-0 text-trading-ask"
+                            className="text-trading-ask"
                             title="Stop"
                             aria-label="Stop bot"
                             onClick={() => onStatusChange(bot.id, "stopped")}
@@ -211,9 +215,9 @@ export function BotManagerPanel({ bots, onStatusChange, onCreateBot }: BotManage
                       {bot.status === "stopped" && (
                         <Button
                           intent="ghost"
-                          size="xs"
+                          size="icon"
                           type="button"
-                          className="w-6 h-6 p-0 text-trading-bid"
+                          className="text-trading-bid"
                           title="Run"
                           aria-label="Run bot"
                           onClick={() => onStatusChange(bot.id, "running")}
@@ -229,7 +233,7 @@ export function BotManagerPanel({ bots, onStatusChange, onCreateBot }: BotManage
                     <Link
                       to="/bots/$botId"
                       params={{ botId: bot.id }}
-                      className="flex items-center justify-center w-6 h-6 rounded cursor-pointer text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                      className="inline-flex items-center justify-center w-6 h-6 rounded-sm shrink-0 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer"
                       title="View details"
                     >
                       <ChevronRight size={13} />

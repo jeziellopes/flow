@@ -11,9 +11,9 @@ export function DepthBar({ percent, side }: DepthBarProps) {
 
   return (
     <div
-      className={cn("absolute inset-y-0 opacity-15", {
-        "right-0 bg-trading-bid": side === "bid",
-        "left-0 bg-trading-ask": side === "ask",
+      className={cn("absolute inset-y-0 right-0 opacity-15", {
+        "bg-trading-bid": side === "bid",
+        "bg-trading-ask": side === "ask",
       })}
       style={{ width: `${clampedPercent}%` }}
     />

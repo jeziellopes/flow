@@ -1,17 +1,26 @@
 import { describe, expect, it } from "vitest";
-import { DEFAULT_SYMBOL, findSymbol, SYMBOL_CATEGORIES, SYMBOLS } from "./symbols";
+import {
+  DEFAULT_SYMBOL,
+  findSymbol,
+  isValidSymbol,
+  normalizeSymbol,
+  SYMBOL_CATEGORIES,
+  SYMBOLS,
+} from "./symbols";
 
 describe("SYMBOLS", () => {
   it("has 18 entries", () => {
     expect(SYMBOLS).toHaveLength(18);
   });
 
-  it("every symbol has symbol, base, quote, category fields", () => {
+  it("every symbol has symbol, base, quote, category, pricePrecision, qtyPrecision fields", () => {
     for (const s of SYMBOLS) {
       expect(typeof s.symbol).toBe("string");
       expect(typeof s.base).toBe("string");
       expect(typeof s.quote).toBe("string");
       expect(typeof s.category).toBe("string");
+      expect(typeof s.pricePrecision).toBe("number");
+      expect(typeof s.qtyPrecision).toBe("number");
     }
   });
 
@@ -45,6 +54,8 @@ describe("findSymbol", () => {
     expect(result?.symbol).toBe("BTCUSDT");
     expect(result?.base).toBe("BTC");
     expect(result?.quote).toBe("USDT");
+    expect(result?.pricePrecision).toBe(2);
+    expect(result?.qtyPrecision).toBe(5);
   });
 
   it("returns undefined for non-existent symbol", () => {
@@ -53,6 +64,27 @@ describe("findSymbol", () => {
 
   it("is case-sensitive", () => {
     expect(findSymbol("btcusdt")).toBeUndefined();
+  });
+});
+
+describe("normalizeSymbol", () => {
+  it("uppercases the input", () => {
+    expect(normalizeSymbol("btcusdt")).toBe("BTCUSDT");
+    expect(normalizeSymbol("ethusdt")).toBe("ETHUSDT");
+    expect(normalizeSymbol("BTCUSDT")).toBe("BTCUSDT");
+  });
+});
+
+describe("isValidSymbol", () => {
+  it("returns true for valid symbols (case-insensitive)", () => {
+    expect(isValidSymbol("BTCUSDT")).toBe(true);
+    expect(isValidSymbol("btcusdt")).toBe(true);
+    expect(isValidSymbol("BtcUsdt")).toBe(true);
+  });
+
+  it("returns false for unknown symbols", () => {
+    expect(isValidSymbol("FAKECOIN")).toBe(false);
+    expect(isValidSymbol("")).toBe(false);
   });
 });
 

@@ -1,20 +1,10 @@
 import { createContext, type ReactNode, use } from "react";
 import { AskTable, BidTable } from "./bid-ask-table";
 import { ConnectionBanner } from "./connection-banner";
-import type { PriceLevel } from "./order-book-row";
 import { SpreadBar } from "./spread-bar";
+import type { OrderBookState } from "./types";
 
-interface OrderBookState {
-  bids: PriceLevel[];
-  asks: PriceLevel[];
-  bestBid: number;
-  bestAsk: number;
-  lastPrice: number;
-  spreadAmount: number;
-  spreadPercent: number;
-  connectionStatus: "connected" | "reconnecting" | "disconnected";
-  lastPriceTick?: "up" | "down" | "neutral";
-}
+export type { OrderBookState } from "./types";
 
 interface OrderBookProps {
   state: OrderBookState;
@@ -29,14 +19,25 @@ function useOrderBookContext(): OrderBookState {
   return ctx;
 }
 
+const COLUMN_HEADER_ROW = (
+  <tr className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+    <th className="px-2 py-1 text-left font-normal">Price</th>
+    <th className="px-2 py-1 text-right font-normal">Amount</th>
+    <th className="px-2 py-1 text-right font-normal">Total</th>
+  </tr>
+);
+
 function OrderBookAsks() {
   const state = useOrderBookContext();
   return (
     <div
       data-testid="asks-container"
-      className="flex-1 min-h-0 overflow-y-auto flex flex-col justify-end"
+      className="flex-1 min-h-0 overflow-y-scroll flex flex-col justify-end"
     >
-      <AskTable levels={state.asks} />
+      <table className="w-full table-fixed" aria-label="Ask orders">
+        <thead>{COLUMN_HEADER_ROW}</thead>
+        <AskTable levels={state.asks} />
+      </table>
     </div>
   );
 }
@@ -44,8 +45,11 @@ function OrderBookAsks() {
 function OrderBookBids() {
   const state = useOrderBookContext();
   return (
-    <div data-testid="bids-container" className="flex-1 min-h-0 overflow-y-auto">
-      <BidTable levels={state.bids} />
+    <div data-testid="bids-container" className="flex-1 min-h-0 overflow-y-scroll">
+      <table className="w-full table-fixed" aria-label="Bid orders">
+        <thead className="sr-only">{COLUMN_HEADER_ROW}</thead>
+        <BidTable levels={state.bids} />
+      </table>
     </div>
   );
 }
@@ -85,7 +89,48 @@ export function OrderBook({ state, children }: OrderBookProps) {
   );
 }
 
+// ---------------------------------------------------------------------------
+// Explicit view variants — compose sub-components, no boolean conditionals
+// ---------------------------------------------------------------------------
+
+/** Bids + Asks, spread in the middle. Default Binance-style layout. */
+function OrderBookBothView({ state }: { state: OrderBookState }) {
+  return (
+    <OrderBook state={state}>
+      <OrderBook.ConnectionBanner />
+      <OrderBook.Asks />
+      <OrderBook.Spread />
+      <OrderBook.Bids />
+    </OrderBook>
+  );
+}
+
+/** Asks only — spread shown below as last-price reference. */
+function OrderBookAsksView({ state }: { state: OrderBookState }) {
+  return (
+    <OrderBook state={state}>
+      <OrderBook.ConnectionBanner />
+      <OrderBook.Asks />
+      <OrderBook.Spread />
+    </OrderBook>
+  );
+}
+
+/** Bids only — spread shown above as last-price reference. */
+function OrderBookBidsView({ state }: { state: OrderBookState }) {
+  return (
+    <OrderBook state={state}>
+      <OrderBook.ConnectionBanner />
+      <OrderBook.Spread />
+      <OrderBook.Bids />
+    </OrderBook>
+  );
+}
+
 OrderBook.Asks = OrderBookAsks;
 OrderBook.Bids = OrderBookBids;
 OrderBook.Spread = OrderBookSpread;
 OrderBook.ConnectionBanner = OrderBookConnectionBanner;
+OrderBook.BothView = OrderBookBothView;
+OrderBook.AsksView = OrderBookAsksView;
+OrderBook.BidsView = OrderBookBidsView;
