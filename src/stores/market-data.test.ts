@@ -40,6 +40,7 @@ function createMockSource() {
       tickerCb = cb;
     }),
     getSnapshot: vi.fn(),
+    fetchKlines: vi.fn().mockResolvedValue([]),
   };
 
   return {
@@ -81,6 +82,7 @@ function resetStore() {
   useMarketDataStore.setState({
     orderBook: null,
     trades: [],
+    klines: [],
     connectionStatus: "disconnected",
     symbol: null,
   });

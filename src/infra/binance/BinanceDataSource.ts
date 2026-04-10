@@ -1,5 +1,6 @@
 import type { MarketDataSource } from "@/domain/market-data/MarketDataSource";
 import type {
+  NormalizedCandle,
   NormalizedDepthUpdate,
   NormalizedSnapshot,
   NormalizedTicker,
@@ -119,6 +120,21 @@ export class BinanceDataSource implements MarketDataSource {
 
   onTicker(cb: (ticker: NormalizedTicker) => void): void {
     this.tickerCallbacks.push(cb);
+  }
+
+  async fetchKlines(symbol: string, interval: string, limit: number): Promise<NormalizedCandle[]> {
+    const url = `https://api.binance.com/api/v3/klines?symbol=${symbol.toUpperCase()}&interval=${interval}&limit=${limit}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Binance klines fetch failed: ${res.status}`);
+    const raw: unknown[][] = (await res.json()) as unknown[][];
+    return raw.map((k) => ({
+      time: Math.floor(Number(k[0]) / 1000),
+      open: Number(k[1]),
+      high: Number(k[2]),
+      low: Number(k[3]),
+      close: Number(k[4]),
+      volume: Number(k[5]),
+    }));
   }
 
   private connectStreams(symbol: string): void {

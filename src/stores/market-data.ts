@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { applyDepthUpdate, bookFromSnapshot } from "@/domain/market-data/book-sync";
 import type { MarketDataSource } from "@/domain/market-data/MarketDataSource";
 import type {
+  NormalizedCandle,
   NormalizedDepthUpdate,
   NormalizedSnapshot,
   NormalizedTicker,
@@ -19,6 +20,7 @@ interface MarketDataState {
   orderBook: OrderBook | null;
   trades: NormalizedTrade[];
   ticker: NormalizedTicker | null;
+  klines: NormalizedCandle[];
   connectionStatus: ConnectionStatus;
   symbol: string | null;
   symbolInfo: SymbolInfo | null;
@@ -31,6 +33,8 @@ interface MarketDataActions {
   teardown(source: MarketDataSource): void;
   /** Store SymbolInfo metadata (base, quote, precision, etc.) for the active symbol. */
   setSymbolInfo(info: SymbolInfo): void;
+  /** Fetch historical klines for symbol+interval and store them. */
+  loadKlines(symbol: string, interval: string): Promise<void>;
 }
 
 // ---------------------------------------------------------------------------
@@ -41,6 +45,11 @@ interface MarketDataActions {
 // ---------------------------------------------------------------------------
 
 const MAX_PENDING = 10;
+
+// Module-level source reference — set during initMarketData, cleared on teardown.
+// Not in Zustand state (not serializable). Enables loadKlines to resolve the source
+// without threading it through every call site.
+let _source: MarketDataSource | null = null;
 
 let pendingUpdates: NormalizedDepthUpdate[] = [];
 let rafHandle: number | null = null;
@@ -88,6 +97,7 @@ export const useMarketDataStore = create<MarketDataState & MarketDataActions>((s
   orderBook: null,
   trades: [],
   ticker: null,
+  klines: [],
   connectionStatus: "disconnected",
   symbol: null,
   symbolInfo: null,
@@ -97,6 +107,8 @@ export const useMarketDataStore = create<MarketDataState & MarketDataActions>((s
   },
 
   async initMarketData(source, symbol) {
+    _source = source;
+
     // Register callbacks first so buffering starts immediately.
     source.onStatusChange((status) => {
       set({ connectionStatus: status });
@@ -130,6 +142,7 @@ export const useMarketDataStore = create<MarketDataState & MarketDataActions>((s
 
   teardown(source) {
     source.disconnect();
+    _source = null;
     // Cancel any pending RAF batch
     if (rafHandle !== null) {
       cancelAnimationFrame(rafHandle);
@@ -140,10 +153,21 @@ export const useMarketDataStore = create<MarketDataState & MarketDataActions>((s
       orderBook: null,
       trades: [],
       ticker: null,
+      klines: [],
       connectionStatus: "disconnected",
       symbol: null,
       symbolInfo: null,
     });
+  },
+
+  async loadKlines(symbol, interval) {
+    if (!_source) return;
+    try {
+      const klines = await _source.fetchKlines(symbol, interval, 500);
+      set({ klines });
+    } catch {
+      // Network failure — leave existing klines in place
+    }
   },
 }));
 
@@ -231,4 +255,9 @@ export function usePriceChangePct(): number | null {
     if (open === 0) return null;
     return ((close - open) / open) * 100;
   });
+}
+
+/** Historical OHLCV candles for the active symbol. Empty array before first loadKlines call. */
+export function useKlines(): NormalizedCandle[] {
+  return useMarketDataStore((s) => s.klines);
 }

@@ -1,4 +1,5 @@
 import type {
+  NormalizedCandle,
   NormalizedDepthUpdate,
   NormalizedSnapshot,
   NormalizedTicker,
@@ -22,4 +23,7 @@ export interface MarketDataSource {
   onDepthUpdate(cb: (update: NormalizedDepthUpdate) => void): void;
   onTrade(cb: (trade: NormalizedTrade) => void): void;
   onTicker(cb: (ticker: NormalizedTicker) => void): void;
+
+  /** Fetch historical OHLCV candles from REST. Returns up to `limit` candles. */
+  fetchKlines(symbol: string, interval: string, limit: number): Promise<NormalizedCandle[]>;
 }

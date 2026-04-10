@@ -1,5 +1,6 @@
 import { toast } from "sonner";
 import { create } from "zustand";
+import { useShallow } from "zustand/shallow";
 import type { Order, OrderInput, OrderStatusUpdate } from "@/domain/trading/types";
 import { LocalFillEngine } from "@/infra/local/LocalFillEngine";
 import { useMarketDataStore } from "@/stores/market-data";
@@ -228,4 +229,23 @@ export function useOpenOrders(): Order[] {
 
 export function useFilledOrders(): Order[] {
   return usePortfolioStore((s) => s.filledOrders);
+}
+
+const INITIAL_USDT_BALANCE = 10_000;
+
+/**
+ * Derives live portfolio summary values from the portfolio store.
+ * - totalBalance: current USDT balance
+ * - totalPnL: USDT balance delta from starting $10,000
+ * - totalPnLPct: delta as a percentage of initial balance
+ */
+export function usePortfolioSummary() {
+  return usePortfolioStore(
+    useShallow((s) => {
+      const totalBalance = parseFloat(s.balances.USDT ?? "0");
+      const totalPnL = totalBalance - INITIAL_USDT_BALANCE;
+      const totalPnLPct = (totalPnL / INITIAL_USDT_BALANCE) * 100;
+      return { totalBalance, totalPnL, totalPnLPct };
+    }),
+  );
 }
