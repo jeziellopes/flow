@@ -1,3 +1,4 @@
+import { Activity } from "lucide-react";
 import type { Order } from "@/domain/trading/types";
 import { cn } from "@/lib/utils";
 
@@ -15,10 +16,12 @@ function formatTime(ts: number): string {
 export function MyTradesFeed({ orders }: MyTradesFeedProps) {
   if (orders.length === 0) {
     return (
-      <div className="flex flex-col h-full justify-center">
-        <div className="flex items-center justify-center h-16 text-xs text-muted-foreground font-mono">
-          No fills yet — place an order to see your trades here.
-        </div>
+      <div className="flex flex-col items-center justify-center h-full gap-2 py-6 text-center">
+        <Activity className="w-6 h-6 text-muted-foreground/40" strokeWidth={1.5} />
+        <p className="text-xs text-muted-foreground font-mono">No fills yet</p>
+        <p className="text-[10px] text-muted-foreground/60 font-mono">
+          Place an order to see your trades here
+        </p>
       </div>
     );
   }

@@ -1,3 +1,4 @@
+import { ClipboardList } from "lucide-react";
 import { useOpenOrders, usePortfolioStore } from "@/stores/portfolio";
 import { Button } from "@/ui/button";
 
@@ -7,8 +8,12 @@ export function OpenOrders() {
 
   if (orders.length === 0) {
     return (
-      <div className="flex flex-col h-full justify-center">
-        <p className="text-xs text-muted-foreground text-center py-4 font-mono">No open orders</p>
+      <div className="flex flex-col items-center justify-center h-full gap-2 py-6 text-center">
+        <ClipboardList className="w-6 h-6 text-muted-foreground/40" strokeWidth={1.5} />
+        <p className="text-xs text-muted-foreground font-mono">No open orders</p>
+        <p className="text-[10px] text-muted-foreground/60 font-mono">
+          Place a limit order to see it here
+        </p>
       </div>
     );
   }

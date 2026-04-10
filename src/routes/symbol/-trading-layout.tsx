@@ -88,7 +88,7 @@ function OrderPanel({ symbol }: { symbol: string }) {
   };
 
   return (
-    <Panel title="Place Order">
+    <Panel title="Place Order" draggable>
       <Panel.Content>
         <div className="p-3">
           <OrderForm
@@ -168,7 +168,7 @@ export function TerminalLayout({ symbol, tab = "book" }: TerminalLayoutProps) {
               </ErrorBoundary>
             </div>
             <div key="chart">
-              <Panel title="Price Chart">
+              <Panel title="Price Chart" draggable>
                 <Panel.Header extra={timeframeTabs} />
                 <Panel.Content noScroll>
                   <div className="flex-1 p-2 min-h-0">
@@ -184,7 +184,7 @@ export function TerminalLayout({ symbol, tab = "book" }: TerminalLayoutProps) {
             </div>
             <div key="portfolio">
               <ErrorBoundary>
-                <Panel title="Portfolio">
+                <Panel title="Portfolio" draggable>
                   <Panel.Content noScroll>
                     <PortfolioSummaryWidget {...MOCK_PORTFOLIO_SUMMARY} botPnl={botPnl} />
                   </Panel.Content>
@@ -193,7 +193,7 @@ export function TerminalLayout({ symbol, tab = "book" }: TerminalLayoutProps) {
             </div>
             <div key="trades">
               <ErrorBoundary>
-                <Panel title="Market Trades">
+                <Panel title="Market Trades" draggable>
                   <Panel.Content noScroll>
                     <MarketTradesPanel />
                   </Panel.Content>

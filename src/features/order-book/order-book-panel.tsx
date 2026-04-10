@@ -16,7 +16,7 @@ export function OrderBookPanel() {
   const BookView = BOOK_VIEW[viewMode];
 
   return (
-    <Panel title="Order Book">
+    <Panel title="Order Book" draggable>
       <Panel.Content noScroll>
         <BookControls.Root>
           <BookControls.ViewToggle value={viewMode} onChange={setViewMode} />
