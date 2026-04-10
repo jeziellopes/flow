@@ -33,7 +33,7 @@ Build a real-time trading engine simulator that showcases modern frontend engine
 ### In Scope (P0 + P1)
 
 - Live order book with bid/ask depth, spread, and depth chart
-- **OHLCV candlestick price chart** (lightweight-charts) — issue [#8](https://github.com/jeziellopes/trading-engine/issues/8)
+- **OHLCV candlestick price chart** (lightweight-charts) — Merged [#153](https://github.com/jeziellopes/flow/pull/153), [#156](https://github.com/jeziellopes/flow/pull/156) ✅
 - Real-time trades feed (ring buffer, last 100)
 - Symbol routing with typed params and search state in URL
 - Simulated order entry (market + limit orders against live prices)
@@ -187,29 +187,29 @@ Grid: `grid-cols-[300px_1fr_300px] gap-4` — order book | chart | positions.
 What "done" looks like for this project:
 
 ### Technical Quality
-- [ ] All acceptance criteria from specs have passing tests
-- [ ] No manual `useMemo`/`useCallback`/`React.memo` — React Compiler handles memoization
-- [ ] TypeScript strict mode with zero `any` or `as` casts
-- [ ] All Binance messages validated with Zod before entering the store
-- [ ] Strings for all prices/quantities — no floating-point financial math
+- [x] All acceptance criteria from specs have passing tests
+- [x] No manual `useMemo`/`useCallback`/`React.memo` — React Compiler handles memoization
+- [x] TypeScript strict mode — no `: any` types (some `as` casts exist at validated Zod boundaries)
+- [x] All Binance messages validated with Zod before entering the store
+- [x] Strings for all prices/quantities — no floating-point financial math
 
 ### Demo Quality
-- [ ] Builds and runs from a clean clone (`git clone` → `npm ci` → `npm run dev`)
-- [ ] Order book visibly updates in real-time within 2 seconds of load
-- [ ] Symbol switching is smooth — no blank screens or stale data flash
-- [ ] Simulated order fills reflect in balance and trade history immediately
-- [ ] Disconnect/reconnect is visible and recovers cleanly
+- [x] Builds and runs from a clean clone (`git clone` → `npm ci` → `npm run dev`)
+- [x] Order book visibly updates in real-time within 2 seconds of load
+- [x] Symbol switching is smooth — no blank screens or stale data flash
+- [x] Simulated order fills reflect in balance and trade history immediately
+- [x] Disconnect/reconnect is visible and recovers cleanly
 
 ### Architecture Quality
-- [ ] `MarketDataSource` interface exists — data layer is swappable
-- [ ] `OrderGateway` interface exists — fill engine is swappable
-- [ ] Feature-driven directory structure (`src/features/<name>/`)
-- [ ] Zustand selectors are granular — components subscribe to slices, not whole store
-- [ ] No prop drilling — state flows through stores and route context
+- [x] `MarketDataSource` interface exists — data layer is swappable
+- [x] `OrderGateway` interface exists — fill engine is swappable
+- [x] Feature-driven directory structure (`src/features/<name>/`)
+- [x] Zustand selectors are granular — components subscribe to slices, not whole store
+- [x] No prop drilling — state flows through stores and route context
 
 ### Interview Readiness
-- [ ] Can explain every architectural trade-off in ROADMAP.md
-- [ ] Can demonstrate the WebSocket reconnect path live
-- [ ] Can point to the `MarketDataSource`/`OrderGateway` interfaces as backend integration points
-- [ ] Can show React 19.2 features in action: `<Activity>`, `useEffectEvent`, `useOptimistic`
-- [ ] Can profile the order book in Chrome DevTools using React Performance Tracks
+- [x] Can explain every architectural trade-off in ROADMAP.md
+- [x] Can demonstrate the WebSocket reconnect path live
+- [x] Can point to the `MarketDataSource`/`OrderGateway` interfaces as backend integration points
+- [x] Can show React 19.2 features in action: `<Activity>`, `useEffectEvent`, `useOptimistic`
+- [x] Can profile the order book in Chrome DevTools using React Performance Tracks

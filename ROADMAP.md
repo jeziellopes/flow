@@ -10,9 +10,9 @@ These features form the core demo. Without them, my project doesn't tell a story
 
 | Feature | Spec | Status |
 |---|---|---|
-| WebSocket data layer | `specs/websocket-data-layer.spec.md` | Spec ready |
-| Order book UI | `specs/order-book-ui.spec.md` | Spec ready |
-| Symbol routing | `specs/symbol-routing.spec.md` | Spec ready |
+| WebSocket data layer | `specs/websocket-data-layer.spec.md` | ✅ Merged — [#100](https://github.com/jeziellopes/flow/pull/100) |
+| Symbol routing | `specs/symbol-routing.spec.md` | ✅ Merged — [#102](https://github.com/jeziellopes/flow/pull/102) |
+| Order book UI | `specs/order-book-ui.spec.md` | ✅ Merged — [#103](https://github.com/jeziellopes/flow/pull/103), [#111](https://github.com/jeziellopes/flow/pull/111), [#127](https://github.com/jeziellopes/flow/pull/127), [#149](https://github.com/jeziellopes/flow/pull/149) |
 
 ### P1 — Should Ship
 
@@ -20,8 +20,9 @@ Adds depth to my demo. Proves form handling, state management, and optimistic UI
 
 | Feature | Spec | Status |
 |---|---|---|
-| Simulated order entry | `specs/simulated-order-entry.spec.md` | 🔄 In progress |
-| Portfolio tracker (balances, PnL, history) | Included in order entry spec | Spec ready |
+| Simulated order entry | `specs/simulated-order-entry.spec.md` | ✅ Merged — [#132](https://github.com/jeziellopes/flow/pull/132) |
+| Portfolio tracker (balances, PnL, history) | Included in order entry spec | ✅ Merged — [#153](https://github.com/jeziellopes/flow/pull/153) |
+| OHLCV candlestick chart (real-time klines) | `specs/order-book-ui.spec.md` | ✅ Merged — [#153](https://github.com/jeziellopes/flow/pull/153), [#156](https://github.com/jeziellopes/flow/pull/156) |
 
 ### P2 — Stretch Goals
 
