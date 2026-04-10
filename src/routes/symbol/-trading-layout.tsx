@@ -8,7 +8,6 @@ import { MarketTradesFeed } from "@/features/trades/market-trades-feed";
 import { MyTradesFeed } from "@/features/trades/my-trades-feed";
 import { DataPanel } from "@/features/trading/data-panel";
 import { PortfolioSummaryWidget } from "@/features/trading/portfolio-summary-widget";
-import { MOCK_PORTFOLIO_SUMMARY } from "@/lib/mock-data";
 import { useConnectionStatus, useTrades } from "@/stores/market-data";
 import { useFilledOrders, usePortfolioStore } from "@/stores/portfolio";
 import { useTerminalStore } from "@/stores/terminal-store";
@@ -171,7 +170,7 @@ export function TerminalLayout({ symbol, tab = "book" }: TerminalLayoutProps) {
                 <Panel.Header extra={timeframeTabs} />
                 <Panel.Content noScroll>
                   <div className="flex-1 p-2 min-h-0">
-                    <CandleChart key={activeTimeframe} interval={activeTimeframe} />
+                    <CandleChart key={activeTimeframe} symbol={symbol} interval={activeTimeframe} />
                   </div>
                 </Panel.Content>
               </Panel>
@@ -185,7 +184,7 @@ export function TerminalLayout({ symbol, tab = "book" }: TerminalLayoutProps) {
               <ErrorBoundary>
                 <Panel title="Portfolio" draggable>
                   <Panel.Content noScroll>
-                    <PortfolioSummaryWidget {...MOCK_PORTFOLIO_SUMMARY} botPnl={botPnl} />
+                    <PortfolioSummaryWidget botPnl={botPnl} />
                   </Panel.Content>
                 </Panel>
               </ErrorBoundary>

@@ -5,10 +5,12 @@ import {
   createChart,
   type Time,
 } from "lightweight-charts";
-import { MOCK_CANDLES_BY_INTERVAL } from "@/lib/mock-data";
+import { useEffect } from "react";
+import type { NormalizedCandle } from "@/domain/market-data/normalized";
+import { useMarketDataStore } from "@/stores/market-data";
 
 interface CandleChartProps {
-  /** Interval key matching MOCK_CANDLES_BY_INTERVAL. Defaults to "15m". */
+  symbol: string;
   interval?: string;
 }
 
@@ -40,7 +42,17 @@ function withAlpha(rgb: string, alpha: number): string {
   return `rgba(${m[1]}, ${m[2]}, ${m[3]}, ${alpha})`;
 }
 
-export function CandleChart({ interval = "15m" }: CandleChartProps) {
+function toChartData(c: NormalizedCandle): CandlestickData<Time> {
+  return { time: c.time as Time, open: c.open, high: c.high, low: c.low, close: c.close };
+}
+
+export function CandleChart({ symbol, interval = "15m" }: CandleChartProps) {
+  // Kick off klines fetch on mount. Component remounts via key={activeTimeframe}
+  // on interval change, so this effect runs once per interval.
+  useEffect(() => {
+    void useMarketDataStore.getState().loadKlines(symbol, interval);
+  }, [symbol, interval]);
+
   const chartRef = (el: HTMLDivElement | null) => {
     if (!el) return;
 
@@ -80,16 +92,23 @@ export function CandleChart({ interval = "15m" }: CandleChartProps) {
       borderVisible: false,
     });
 
-    const raw = MOCK_CANDLES_BY_INTERVAL[interval] ?? MOCK_CANDLES_BY_INTERVAL["15m"] ?? [];
-    const data: CandlestickData<Time>[] = raw.map((c) => ({
-      time: c.time as Time,
-      open: c.o,
-      high: c.h,
-      low: c.l,
-      close: c.c,
-    }));
-    series.setData(data);
-    chart.timeScale().fitContent();
+    // Seed from already-loaded klines (handles race where data arrives before mount)
+    const initial = useMarketDataStore.getState().klines;
+    if (initial.length > 0) {
+      series.setData(initial.map(toChartData));
+      chart.timeScale().fitContent();
+    }
+
+    // Subscribe to future klines updates imperatively — avoids React re-renders
+    // that would recreate the chart on every state change.
+    let prevKlines = initial;
+    const unsub = useMarketDataStore.subscribe((state) => {
+      if (state.klines !== prevKlines && state.klines.length > 0) {
+        prevKlines = state.klines;
+        series.setData(state.klines.map(toChartData));
+        chart.timeScale().fitContent();
+      }
+    });
 
     let fitted = false;
     const ro = new ResizeObserver((entries) => {
@@ -106,6 +125,7 @@ export function CandleChart({ interval = "15m" }: CandleChartProps) {
     ro.observe(el);
 
     return () => {
+      unsub();
       ro.disconnect();
       chart.remove();
     };

@@ -29,3 +29,13 @@ export interface NormalizedTicker {
   lowPrice: string;
   volume: string;
 }
+
+/** OHLCV candlestick. time is a Unix timestamp in seconds (lightweight-charts format). */
+export interface NormalizedCandle {
+  time: number;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+}
