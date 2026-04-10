@@ -699,7 +699,7 @@ function DesignSystemShowcase() {
         <Section title="Order Entry">
           <div className="max-w-xs">
             <Card>
-              <OrderForm symbol="BTCUSDT" onSubmit={() => {}} />
+              <OrderForm symbol="BTCUSDT" onSubmit={async () => undefined} />
             </Card>
           </div>
         </Section>

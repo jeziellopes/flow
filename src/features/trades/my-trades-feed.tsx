@@ -1,8 +1,8 @@
+import type { Order } from "@/domain/trading/types";
 import { cn } from "@/lib/utils";
-import type { SimulatedFill } from "@/stores/terminal-store";
 
 interface MyTradesFeedProps {
-  fills: SimulatedFill[];
+  orders: Order[];
 }
 
 function formatTime(ts: number): string {
@@ -12,8 +12,8 @@ function formatTime(ts: number): string {
     .join(":");
 }
 
-export function MyTradesFeed({ fills }: MyTradesFeedProps) {
-  if (fills.length === 0) {
+export function MyTradesFeed({ orders }: MyTradesFeedProps) {
+  if (orders.length === 0) {
     return (
       <div className="flex flex-col h-full justify-center">
         <div className="flex items-center justify-center h-16 text-xs text-muted-foreground font-mono">
@@ -36,23 +36,23 @@ export function MyTradesFeed({ fills }: MyTradesFeedProps) {
           </tr>
         </thead>
         <tbody>
-          {fills.map((f) => {
-            const isBuy = f.side === "buy";
+          {orders.map((order) => {
+            const isBuy = order.side === "buy";
             const color = isBuy ? "text-trading-bid" : "text-trading-ask";
+            const fillPrice = Number(order.fillPrice ?? order.price);
+            const ts = order.filledAt ?? order.updatedAt;
             return (
               <tr
-                key={f.id}
+                key={order.id}
                 className="border-b border-border/40 hover:bg-muted/30 transition-colors"
               >
-                <td className="px-3 py-1 text-muted-foreground">{formatTime(f.time)}</td>
-                <td className={cn("px-3 py-1 text-right", color)}>
-                  {parseFloat(f.price).toFixed(2)}
-                </td>
+                <td className="px-3 py-1 text-muted-foreground">{formatTime(ts)}</td>
+                <td className={cn("px-3 py-1 text-right", color)}>{fillPrice.toFixed(2)}</td>
                 <td className="px-3 py-1 text-right text-muted-foreground">
-                  {parseFloat(f.quantity).toFixed(4)}
+                  {parseFloat(order.quantity).toFixed(4)}
                 </td>
                 <td className={cn("px-3 py-1 text-right uppercase font-medium", color)}>
-                  {f.side}
+                  {order.side}
                 </td>
               </tr>
             );
