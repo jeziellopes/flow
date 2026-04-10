@@ -2,7 +2,7 @@ import { Children, isValidElement, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 interface PanelProps {
-  title: string;
+  title: ReactNode;
   children: ReactNode;
   className?: string;
   draggable?: boolean;
@@ -58,13 +58,21 @@ export function Panel({ title, children, className, draggable = false }: PanelPr
     >
       <div
         className={cn(
-          `px-3 py-2 border-b border-border shrink-0 flex items-center justify-between gap-2`,
-          draggable && `cursor-move`,
+          "px-3 py-2 border-b border-border shrink-0 flex items-center justify-between gap-2",
+          draggable &&
+            `
+            [&>*]:cursor-auto
+            cursor-move
+          `,
         )}
       >
-        <h2 className="text-xs font-cypher font-semibold tracking-widest uppercase text-foreground select-none">
-          {title}
-        </h2>
+        {typeof title === "string" ? (
+          <h2 className="text-xs font-cypher font-semibold tracking-widest uppercase text-foreground select-none">
+            {title}
+          </h2>
+        ) : (
+          title
+        )}
         {extra}
       </div>
       {bodyChildren}

@@ -8,6 +8,7 @@ import { MarketTradesFeed } from "@/features/trades/market-trades-feed";
 import { MyTradesFeed } from "@/features/trades/my-trades-feed";
 import { DataPanel } from "@/features/trading/data-panel";
 import { PortfolioSummaryWidget } from "@/features/trading/portfolio-summary-widget";
+import { TickerStatStrip } from "@/features/trading/ticker-stat-strip";
 import { useConnectionStatus, useTrades } from "@/stores/market-data";
 import { useFilledOrders, usePortfolioStore } from "@/stores/portfolio";
 import { useTerminalStore } from "@/stores/terminal-store";
@@ -118,8 +119,8 @@ export function TerminalLayout({ symbol, tab = "book" }: TerminalLayoutProps) {
   const botPnl = bots.reduce((sum, b) => sum + b.realizedPnl + b.unrealizedPnl, 0);
   void botPnl; // TODO: wire to DataPanel bot summary
   const timeframeTabs = (
-    <div className="flex items-center gap-1">
-      {["1m", "5m", "15m", "1h", "4h", "1d"].map((tf) => (
+    <div className="flex items-center gap-1 pl-2 border-l border-border/60 self-start pt-0.5">
+      {["5m", "15m", "1h", "4h", "1d"].map((tf) => (
         <Button
           key={tf}
           intent="ghost"
@@ -166,7 +167,7 @@ export function TerminalLayout({ symbol, tab = "book" }: TerminalLayoutProps) {
               </ErrorBoundary>
             </div>
             <div key="chart">
-              <Panel title="Price Chart" draggable>
+              <Panel title={<TickerStatStrip />} draggable>
                 <Panel.Header extra={timeframeTabs} />
                 <Panel.Content noScroll>
                   <div className="flex-1 p-2 min-h-0">
