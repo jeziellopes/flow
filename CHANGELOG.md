@@ -1,3 +1,10 @@
+# [1.1.0-next.19](https://github.com/jeziellopes/flow/compare/v1.1.0-next.18...v1.1.0-next.19) (2026-04-10)
+
+
+### Features
+
+* **ticker:** wire live price, OHLV, and tick direction from [@mini](https://github.com/mini)Ticker stream; fix portfolio widget ([ac6fd2e](https://github.com/jeziellopes/flow/commit/ac6fd2e333c73fbaeadc62d418c27af886556160)), closes [#135](https://github.com/jeziellopes/flow/issues/135) [#136](https://github.com/jeziellopes/flow/issues/136)
+
 # [1.1.0-next.18](https://github.com/jeziellopes/flow/compare/v1.1.0-next.17...v1.1.0-next.18) (2026-04-10)
 
 
