@@ -2,7 +2,6 @@ import type { NormalizedTrade } from "@/domain/market-data/normalized";
 import { cn } from "@/lib/utils";
 
 interface MarketTradesFeedProps {
-  symbol: string;
   trades: NormalizedTrade[];
 }
 
@@ -13,7 +12,7 @@ function formatTime(ts: number): string {
     .join(":");
 }
 
-export function MarketTradesFeed({ symbol, trades }: MarketTradesFeedProps) {
+export function MarketTradesFeed({ trades }: MarketTradesFeedProps) {
   if (trades.length === 0) {
     return (
       <div className="flex items-center justify-center h-10 text-xs text-muted-foreground font-mono">
@@ -27,7 +26,7 @@ export function MarketTradesFeed({ symbol, trades }: MarketTradesFeedProps) {
       <thead className="sticky top-0 bg-card border-b border-border">
         <tr className="text-muted-foreground text-left">
           <th className="px-2 py-1 font-medium text-left">Price</th>
-          <th className="px-2 py-1 font-medium text-right">{`Amount (${symbol})`}</th>
+          <th className="px-2 py-1 font-medium text-right">Qty</th>
           <th className="px-2 py-1 font-medium text-right">Time</th>
         </tr>
       </thead>

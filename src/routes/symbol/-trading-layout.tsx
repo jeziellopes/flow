@@ -9,7 +9,7 @@ import { MyTradesFeed } from "@/features/trades/my-trades-feed";
 import { DataPanel } from "@/features/trading/data-panel";
 import { PortfolioSummaryWidget } from "@/features/trading/portfolio-summary-widget";
 import { MOCK_PORTFOLIO_SUMMARY } from "@/lib/mock-data";
-import { useBaseAsset, useConnectionStatus, useTrades } from "@/stores/market-data";
+import { useConnectionStatus, useTrades } from "@/stores/market-data";
 import { useFilledOrders, usePortfolioStore } from "@/stores/portfolio";
 import { useTerminalStore } from "@/stores/terminal-store";
 import { Button } from "@/ui/button";
@@ -26,12 +26,11 @@ interface TerminalLayoutProps {
 
 /** Leaf — owns useTrades() subscription; never causes TerminalLayout to re-render. */
 function MarketTradesPanel() {
-  const base = useBaseAsset();
   const trades = useTrades();
   return (
     <div className="flex flex-col h-full min-h-0">
       <div className="flex-1 min-h-0 overflow-y-auto">
-        <MarketTradesFeed symbol={base} trades={trades} />
+        <MarketTradesFeed trades={trades} />
       </div>
     </div>
   );
