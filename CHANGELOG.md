@@ -1,3 +1,10 @@
+# [1.1.0-next.21](https://github.com/jeziellopes/flow/compare/v1.1.0-next.20...v1.1.0-next.21) (2026-04-10)
+
+
+### Bug Fixes
+
+* **panel:** conditional cursor-move, title contrast + rich empty states ([2a32aa9](https://github.com/jeziellopes/flow/commit/2a32aa9116cdc8d0a24a553146a141ea883a097c)), closes [#141](https://github.com/jeziellopes/flow/issues/141) [#142](https://github.com/jeziellopes/flow/issues/142) [#143](https://github.com/jeziellopes/flow/issues/143) [#141](https://github.com/jeziellopes/flow/issues/141) [#142](https://github.com/jeziellopes/flow/issues/142) [#143](https://github.com/jeziellopes/flow/issues/143)
+
 # [1.1.0-next.20](https://github.com/jeziellopes/flow/compare/v1.1.0-next.19...v1.1.0-next.20) (2026-04-10)
 
 
