@@ -1,3 +1,10 @@
+# [1.1.0-next.18](https://github.com/jeziellopes/flow/compare/v1.1.0-next.17...v1.1.0-next.18) (2026-04-10)
+
+
+### Bug Fixes
+
+* **landing:** mark all features done; replace inline styles with Tailwind ([074229f](https://github.com/jeziellopes/flow/commit/074229fac79c445b9ffe035a7474896adfcd6018)), closes [#134](https://github.com/jeziellopes/flow/issues/134) [#137](https://github.com/jeziellopes/flow/issues/137)
+
 # [1.1.0-next.17](https://github.com/jeziellopes/flow/compare/v1.1.0-next.16...v1.1.0-next.17) (2026-04-10)
 
 
