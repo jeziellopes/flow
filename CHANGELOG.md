@@ -1,3 +1,10 @@
+# [1.1.0-next.22](https://github.com/jeziellopes/flow/compare/v1.1.0-next.21...v1.1.0-next.22) (2026-04-10)
+
+
+### Features
+
+* **order-book:** column headers + semantic table structure ([20633d7](https://github.com/jeziellopes/flow/commit/20633d742ceceadb5eabac6d3f12c3ad106b1ac2)), closes [#140](https://github.com/jeziellopes/flow/issues/140) [#144](https://github.com/jeziellopes/flow/issues/144)
+
 # [1.1.0-next.21](https://github.com/jeziellopes/flow/compare/v1.1.0-next.20...v1.1.0-next.21) (2026-04-10)
 
 
