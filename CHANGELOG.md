@@ -1,3 +1,10 @@
+# [1.1.0-next.25](https://github.com/jeziellopes/flow/compare/v1.1.0-next.24...v1.1.0-next.25) (2026-04-10)
+
+
+### Bug Fixes
+
+* **chart:** default to last 100 bars instead of fitContent ([8a8ad7a](https://github.com/jeziellopes/flow/commit/8a8ad7a13aa23a4e391683634587cefa12809d2f)), closes [#157](https://github.com/jeziellopes/flow/issues/157)
+
 # [1.1.0-next.24](https://github.com/jeziellopes/flow/compare/v1.1.0-next.23...v1.1.0-next.24) (2026-04-10)
 
 
