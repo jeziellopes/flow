@@ -1,4 +1,9 @@
-import type { NormalizedDepthUpdate, NormalizedSnapshot, NormalizedTrade } from "./normalized";
+import type {
+  NormalizedDepthUpdate,
+  NormalizedSnapshot,
+  NormalizedTicker,
+  NormalizedTrade,
+} from "./normalized";
 import type { ConnectionStatus } from "./types";
 
 /**
@@ -16,4 +21,5 @@ export interface MarketDataSource {
   getSnapshot(symbol: string): Promise<NormalizedSnapshot>;
   onDepthUpdate(cb: (update: NormalizedDepthUpdate) => void): void;
   onTrade(cb: (trade: NormalizedTrade) => void): void;
+  onTicker(cb: (ticker: NormalizedTicker) => void): void;
 }

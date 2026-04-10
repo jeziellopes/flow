@@ -4,6 +4,7 @@ import type { MarketDataSource } from "@/domain/market-data/MarketDataSource";
 import type {
   NormalizedDepthUpdate,
   NormalizedSnapshot,
+  NormalizedTicker,
   NormalizedTrade,
 } from "@/domain/market-data/normalized";
 import type { ConnectionStatus, OrderBook } from "@/domain/market-data/types";
@@ -17,6 +18,7 @@ import type { SymbolInfo } from "@/lib/symbols";
 interface MarketDataState {
   orderBook: OrderBook | null;
   trades: NormalizedTrade[];
+  ticker: NormalizedTicker | null;
   connectionStatus: ConnectionStatus;
   symbol: string | null;
   symbolInfo: SymbolInfo | null;
@@ -85,6 +87,7 @@ if (typeof document !== "undefined") {
 export const useMarketDataStore = create<MarketDataState & MarketDataActions>((set) => ({
   orderBook: null,
   trades: [],
+  ticker: null,
   connectionStatus: "disconnected",
   symbol: null,
   symbolInfo: null,
@@ -107,6 +110,10 @@ export const useMarketDataStore = create<MarketDataState & MarketDataActions>((s
       set((state) => ({
         trades: [trade, ...state.trades].slice(0, RING_BUFFER_SIZE),
       }));
+    });
+
+    source.onTicker((ticker) => {
+      set({ ticker });
     });
 
     set({ symbol, connectionStatus: "reconnecting" });
@@ -132,6 +139,7 @@ export const useMarketDataStore = create<MarketDataState & MarketDataActions>((s
     set({
       orderBook: null,
       trades: [],
+      ticker: null,
       connectionStatus: "disconnected",
       symbol: null,
       symbolInfo: null,
@@ -201,5 +209,26 @@ export function useBestBid(): string | null {
     const book = s.orderBook;
     if (!book || book.bids.size === 0) return null;
     return String(Math.max(...[...book.bids.keys()].map(Number)));
+  });
+}
+
+/** 24-hour mini-ticker snapshot, or null before the first @miniTicker event. */
+export function useTicker(): NormalizedTicker | null {
+  return useMarketDataStore((s) => s.ticker);
+}
+
+/** Last traded price as a number, or null before ticker arrives. */
+export function useLastPrice(): number | null {
+  return useMarketDataStore((s) => (s.ticker ? Number(s.ticker.lastPrice) : null));
+}
+
+/** 24h price change percentage (computed from open/close), or null before ticker arrives. */
+export function usePriceChangePct(): number | null {
+  return useMarketDataStore((s) => {
+    if (!s.ticker) return null;
+    const open = Number(s.ticker.openPrice);
+    const close = Number(s.ticker.lastPrice);
+    if (open === 0) return null;
+    return ((close - open) / open) * 100;
   });
 }
