@@ -1,3 +1,10 @@
+# [1.1.0-next.26](https://github.com/jeziellopes/flow/compare/v1.1.0-next.25...v1.1.0-next.26) (2026-04-10)
+
+
+### Features
+
+* **portfolio:** persist state to localStorage with reset button ([d092d95](https://github.com/jeziellopes/flow/commit/d092d9582c77d0a752d719e8c55425358ccee0e1)), closes [#133](https://github.com/jeziellopes/flow/issues/133)
+
 # [1.1.0-next.25](https://github.com/jeziellopes/flow/compare/v1.1.0-next.24...v1.1.0-next.25) (2026-04-10)
 
 
