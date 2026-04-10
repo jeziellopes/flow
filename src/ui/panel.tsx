@@ -58,9 +58,7 @@ export function Panel({ title, children, className, draggable = false }: PanelPr
     >
       <div
         className={cn(
-          `
-        px-3 py-2 border-b border-border shrink-0 flex items-center justify-between gap-2
-      `,
+          `px-3 py-2 border-b border-border shrink-0 flex items-center justify-between gap-2`,
           draggable && `cursor-move`,
         )}
       >
