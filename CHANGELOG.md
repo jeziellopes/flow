@@ -1,3 +1,10 @@
+# [1.1.0-next.24](https://github.com/jeziellopes/flow/compare/v1.1.0-next.23...v1.1.0-next.24) (2026-04-10)
+
+
+### Bug Fixes
+
+* **chart+order-book:** real-time kline stream and full-row depth bar ([45be9af](https://github.com/jeziellopes/flow/commit/45be9afe4d891f4188ae8916c4dac8a098c23dd9)), closes [#154](https://github.com/jeziellopes/flow/issues/154) [#155](https://github.com/jeziellopes/flow/issues/155)
+
 # [1.1.0-next.23](https://github.com/jeziellopes/flow/compare/v1.1.0-next.22...v1.1.0-next.23) (2026-04-10)
 
 
