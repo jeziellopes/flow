@@ -38,11 +38,9 @@ describe("OrderBookRow", () => {
   it("renders with correct layout and interaction classes", () => {
     const { container } = render(<OrderBookRow level={mockLevel} side="bid" />);
     const row = container.firstChild as HTMLElement;
-    expect(row.tagName).toBe("BUTTON");
+    expect(row.tagName).toBe("TR");
     expect(row).toHaveClass(
       "relative",
-      "grid",
-      "grid-cols-3",
       "tabular-nums",
       "font-mono",
       "text-xs",
@@ -63,16 +61,17 @@ describe("OrderBookRow", () => {
     expect(row).toHaveClass("hover:bg-muted");
   });
 
-  it("is keyboard accessible (native button, tabIndex=0 implicit)", () => {
+  it("is keyboard accessible (tabIndex=0 + onKeyDown on tr)", () => {
     const { container } = render(<OrderBookRow level={mockLevel} side="bid" />);
     const row = container.firstChild as HTMLElement;
-    expect(row.tagName).toBe("BUTTON");
+    expect(row.tagName).toBe("TR");
+    expect(row).toHaveAttribute("tabindex", "0");
   });
 
   it("sets selectedPrice in UIStore on click", async () => {
     const user = userEvent.setup();
     render(<OrderBookRow level={mockLevel} side="bid" />);
-    const row = screen.getByRole("button");
+    const row = screen.getByRole("row");
     await user.click(row);
     expect(useUIStore.getState().selectedPrice).toBe(42500.5);
   });
@@ -80,7 +79,7 @@ describe("OrderBookRow", () => {
   it("sets selectedPrice in UIStore on Enter key", async () => {
     const user = userEvent.setup();
     render(<OrderBookRow level={mockLevel} side="bid" />);
-    const row = screen.getByRole("button");
+    const row = screen.getByRole("row");
     row.focus();
     await user.keyboard("{Enter}");
     expect(useUIStore.getState().selectedPrice).toBe(42500.5);

@@ -19,6 +19,14 @@ function useOrderBookContext(): OrderBookState {
   return ctx;
 }
 
+const COLUMN_HEADER_ROW = (
+  <tr className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+    <th className="px-2 py-1 text-left font-normal">Price</th>
+    <th className="px-2 py-1 text-right font-normal">Amount</th>
+    <th className="px-2 py-1 text-right font-normal">Total</th>
+  </tr>
+);
+
 function OrderBookAsks() {
   const state = useOrderBookContext();
   return (
@@ -26,7 +34,10 @@ function OrderBookAsks() {
       data-testid="asks-container"
       className="flex-1 min-h-0 overflow-y-scroll flex flex-col justify-end"
     >
-      <AskTable levels={state.asks} />
+      <table className="w-full table-fixed" aria-label="Ask orders">
+        <thead>{COLUMN_HEADER_ROW}</thead>
+        <AskTable levels={state.asks} />
+      </table>
     </div>
   );
 }
@@ -35,7 +46,10 @@ function OrderBookBids() {
   const state = useOrderBookContext();
   return (
     <div data-testid="bids-container" className="flex-1 min-h-0 overflow-y-scroll">
-      <BidTable levels={state.bids} />
+      <table className="w-full table-fixed" aria-label="Bid orders">
+        <thead className="sr-only">{COLUMN_HEADER_ROW}</thead>
+        <BidTable levels={state.bids} />
+      </table>
     </div>
   );
 }

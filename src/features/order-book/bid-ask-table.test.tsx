@@ -20,7 +20,7 @@ describe("BidTable", () => {
 
   it("renders levels in correct order (highest price first)", () => {
     const { container } = render(<BidTable levels={mockBids} />);
-    const rows = container.querySelectorAll("[class*='grid-cols-3']");
+    const rows = container.querySelectorAll("tr");
     expect(rows.length).toBeGreaterThan(0);
   });
 });
@@ -42,10 +42,8 @@ describe("AskTable", () => {
 
   it("renders levels in correct visual order (highest price first → best ask at bottom)", () => {
     const { container } = render(<AskTable levels={mockAsks} />);
-    // Row structure: DepthBar (absolute) + price div + qty div + total div
-    // price is the 2nd child (index 1) in each grid row
-    const priceEls = container.querySelectorAll("[class*='grid-cols-3'] > div:nth-child(2)");
-    const prices = Array.from(priceEls).map((c) => c.textContent?.trim());
+    const priceCells = container.querySelectorAll("tr > td:first-child");
+    const prices = Array.from(priceCells).map((c) => c.textContent?.trim());
     // DOM order should be descending (highest first) so best ask ends at bottom near spread
     expect(prices[0]).toContain("42506");
     expect(prices[2]).toContain("42504");
