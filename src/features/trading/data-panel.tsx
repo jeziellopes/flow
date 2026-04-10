@@ -23,7 +23,7 @@ type TabValue = (typeof TABS)[number]["value"];
 
 /** Self-contained panel — owns its own chrome matching Panel header height/typography. */
 export function DataPanel({ bots, TradesFeedSlot, onBotStatusChange, className }: DataPanelProps) {
-  const [activeTab, setActiveTab] = useState<TabValue>("bots");
+  const [activeTab, setActiveTab] = useState<TabValue>("trades");
 
   return (
     <div

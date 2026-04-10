@@ -9,9 +9,9 @@ const badgeVariants = cva("inline-flex items-center rounded font-mono transition
       // Muted/upcoming status
       muted: "text-[10px] text-muted-foreground border border-border px-1.5 py-0.5",
       // Tag chip (symbol, category)
-      pill: "text-[10px] bg-ds-gray-800 text-muted-foreground px-1.5 py-0.5",
+      pill: "text-[10px] bg-muted text-muted-foreground px-1.5 py-0.5",
       // Numeric stat with dark bg
-      stat: "text-xs bg-ds-gray-800 px-2 py-1",
+      stat: "text-xs bg-muted px-2 py-1",
       // Trading side badges
       buy: "text-[10px] px-1.5 py-0.5 text-trading-bid border border-trading-bid/30",
       sell: "text-[10px] px-1.5 py-0.5 text-trading-ask border border-trading-ask/30",
