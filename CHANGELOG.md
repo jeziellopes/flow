@@ -1,3 +1,10 @@
+# [1.1.0-next.23](https://github.com/jeziellopes/flow/compare/v1.1.0-next.22...v1.1.0-next.23) (2026-04-10)
+
+
+### Features
+
+* **chart+portfolio:** wire real Binance klines and portfolio store ([ebd4b32](https://github.com/jeziellopes/flow/commit/ebd4b324a8444fb20252891f2f5e22bdf03af2c7)), closes [#151](https://github.com/jeziellopes/flow/issues/151) [#152](https://github.com/jeziellopes/flow/issues/152)
+
 # [1.1.0-next.22](https://github.com/jeziellopes/flow/compare/v1.1.0-next.21...v1.1.0-next.22) (2026-04-10)
 
 
