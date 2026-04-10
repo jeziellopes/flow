@@ -2,6 +2,7 @@ import type { MarketDataSource } from "@/domain/market-data/MarketDataSource";
 import type {
   NormalizedDepthUpdate,
   NormalizedSnapshot,
+  NormalizedTicker,
   NormalizedTrade,
 } from "@/domain/market-data/normalized";
 import type { ConnectionStatus } from "@/domain/market-data/types";
@@ -40,6 +41,7 @@ export class BinanceDataSource implements MarketDataSource {
   private statusCallbacks: Array<(s: ConnectionStatus) => void> = [];
   private depthCallbacks: Array<(u: NormalizedDepthUpdate) => void> = [];
   private tradeCallbacks: Array<(t: NormalizedTrade) => void> = [];
+  private tickerCallbacks: Array<(t: NormalizedTicker) => void> = [];
 
   /** Depth events received before the snapshot was applied. */
   private depthBuffer: NormalizedDepthUpdate[] = [];
@@ -115,9 +117,13 @@ export class BinanceDataSource implements MarketDataSource {
     this.tradeCallbacks.push(cb);
   }
 
+  onTicker(cb: (ticker: NormalizedTicker) => void): void {
+    this.tickerCallbacks.push(cb);
+  }
+
   private connectStreams(symbol: string): void {
     const s = symbol.toLowerCase();
-    this.wsClient.connect([`${s}@depth`, `${s}@aggTrade`]);
+    this.wsClient.connect([`${s}@depth`, `${s}@aggTrade`, `${s}@miniTicker`]);
     this.emitStatus("reconnecting");
   }
 
@@ -150,6 +156,14 @@ export class BinanceDataSource implements MarketDataSource {
         isBuyerMaker: msg.m,
       };
       this.emitTrade(trade);
+    } else if (msg.e === "24hrMiniTicker") {
+      this.emitTicker({
+        lastPrice: msg.c,
+        openPrice: msg.o,
+        highPrice: msg.h,
+        lowPrice: msg.l,
+        volume: msg.v,
+      });
     }
   }
 
@@ -170,5 +184,9 @@ export class BinanceDataSource implements MarketDataSource {
 
   private emitTrade(trade: NormalizedTrade): void {
     for (const cb of this.tradeCallbacks) cb(trade);
+  }
+
+  private emitTicker(ticker: NormalizedTicker): void {
+    for (const cb of this.tickerCallbacks) cb(ticker);
   }
 }

@@ -37,9 +37,24 @@ export const AggTradeEventSchema = z.object({
 });
 export type AggTradeEventMsg = z.infer<typeof AggTradeEventSchema>;
 
+/** Binance WebSocket 24hr mini-ticker event (@miniTicker stream). */
+export const MiniTickerEventSchema = z.object({
+  e: z.literal("24hrMiniTicker"),
+  E: z.number(), // event time
+  s: z.string(), // symbol
+  c: z.string(), // last (close) price
+  o: z.string(), // open price
+  h: z.string(), // high price
+  l: z.string(), // low price
+  v: z.string(), // base asset volume
+  q: z.string(), // quote asset volume
+});
+export type MiniTickerEventMsg = z.infer<typeof MiniTickerEventSchema>;
+
 /** Discriminated union for all stream messages this app consumes. */
 export const StreamMessageSchema = z.discriminatedUnion("e", [
   DepthUpdateSchema,
   AggTradeEventSchema,
+  MiniTickerEventSchema,
 ]);
 export type StreamMessage = z.infer<typeof StreamMessageSchema>;

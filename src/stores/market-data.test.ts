@@ -4,6 +4,7 @@ import type { MarketDataSource } from "@/domain/market-data/MarketDataSource";
 import type {
   NormalizedDepthUpdate,
   NormalizedSnapshot,
+  NormalizedTicker,
   NormalizedTrade,
 } from "@/domain/market-data/normalized";
 import type { ConnectionStatus } from "@/domain/market-data/types";
@@ -21,6 +22,7 @@ function createMockSource() {
   let statusCb: ((s: ConnectionStatus) => void) | null = null;
   let depthCb: ((u: NormalizedDepthUpdate) => void) | null = null;
   let tradeCb: ((t: NormalizedTrade) => void) | null = null;
+  let tickerCb: ((t: NormalizedTicker) => void) | null = null;
 
   const source: MarketDataSource = {
     connect: vi.fn(),
@@ -33,6 +35,9 @@ function createMockSource() {
     }),
     onTrade: vi.fn((cb) => {
       tradeCb = cb;
+    }),
+    onTicker: vi.fn((cb) => {
+      tickerCb = cb;
     }),
     getSnapshot: vi.fn(),
   };
@@ -47,6 +52,9 @@ function createMockSource() {
     },
     emitTrade: (t: NormalizedTrade) => {
       tradeCb?.(t);
+    },
+    emitTicker: (t: NormalizedTicker) => {
+      tickerCb?.(t);
     },
   };
 }
