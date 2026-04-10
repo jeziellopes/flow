@@ -92,16 +92,25 @@ export function CandleChart({ symbol, interval = "15m" }: CandleChartProps) {
       borderVisible: false,
     });
 
+    // Show the most recent N bars by default — avoids compressing 500 candles into view.
+    const VISIBLE_BARS = 100;
+    function showLatestBars(len: number): void {
+      chart
+        .timeScale()
+        .setVisibleLogicalRange({ from: Math.max(0, len - VISIBLE_BARS), to: len + 3 });
+    }
+
     // Seed from already-loaded klines (handles race where data arrives before mount)
     const initial = useMarketDataStore.getState().klines;
     if (initial.length > 0) {
       series.setData(initial.map(toChartData));
-      chart.timeScale().fitContent();
+      showLatestBars(initial.length);
     }
 
     // Subscribe to future klines updates imperatively — avoids React re-renders
     // that would recreate the chart on every state change.
     let prevKlines = initial;
+    let rangeSet = initial.length > 0;
     const unsub = useMarketDataStore.subscribe((state) => {
       if (state.klines === prevKlines) return;
       const newKlines = state.klines;
@@ -109,25 +118,25 @@ export function CandleChart({ symbol, interval = "15m" }: CandleChartProps) {
       if (newKlines.length === 0) return;
 
       if (state.klineIsLiveTick) {
-        // Only the last candle changed — use efficient point update, no scroll jump
+        // Only the last candle changed — use efficient point update, no view change
         const last = newKlines[newKlines.length - 1];
         if (last) series.update(toChartData(last));
       } else {
-        // Full REST load or new candle appended — reset series and fit view
+        // Full REST load or new candle appended — reset series, anchor to right edge
         series.setData(newKlines.map(toChartData));
-        chart.timeScale().fitContent();
+        showLatestBars(newKlines.length);
+        rangeSet = true;
       }
     });
 
-    let fitted = false;
     const ro = new ResizeObserver((entries) => {
       for (const entry of entries) {
         const { width, height } = entry.contentRect;
         if (width === 0 || height === 0) continue;
         chart.resize(width, height);
-        if (!fitted) {
+        // If data hasn't loaded yet when chart first renders, set range as fallback
+        if (!rangeSet) {
           chart.timeScale().fitContent();
-          fitted = true;
         }
       }
     });
