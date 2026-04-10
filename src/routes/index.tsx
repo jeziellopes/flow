@@ -84,9 +84,7 @@ export default function LandingPage() {
                   "flex items-start gap-3 px-4 py-3 rounded border",
                   done
                     ? "border-trading-bid-muted bg-trading-bid-muted/10"
-                    : `
-                    border-border bg-transparent
-                  `,
+                    : `border-border bg-transparent`,
                 )}
               >
                 <span
